@@ -5,6 +5,8 @@ import 'package:isar/isar.dart';
 import 'package:flutter_application_1/models/group.dart';
 import 'package:flutter_application_1/models/exercise.dart';
 import 'package:flutter_application_1/models/user.dart';
+import 'package:flutter_application_1/models/water_intake.dart';
+
 
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -29,7 +31,7 @@ class IsarService {
 
   static IsarService get instance => _singleton;
 
-  // Open the database and create it if it doesn't exist
+// Open the database and create it if it doesn't exist
   Future<Isar> openDB() async {
     final directory = await getApplicationDocumentsDirectory();
     final path = '${directory.path}/isar-db';
@@ -41,8 +43,13 @@ class IsarService {
 
     print(path);
     if (Isar.instanceNames.isEmpty) {
-      return await Isar.open([ExerciseSchema, GroupSchema],
-          inspector: true, directory: path);
+      return await Isar.open([
+        ExerciseSchema,
+        GroupSchema,
+        WaterIntakeSchema
+      ], // Include WaterIntakeSchema
+          inspector: true,
+          directory: path);
     }
 
     return Future.value(Isar.getInstance());
@@ -141,6 +148,42 @@ class IsarService {
   Stream<List<Exercise>> watchExercises() async* {
     final isar = await _isar;
     yield* isar.exercises.where().watch(fireImmediately: true);
+  }
+
+// Insert a new WaterIntake
+  Future<void> addWaterIntake(WaterIntake waterIntake) async {
+    final isar = await _isar;
+    await isar.writeTxn(() {
+      isar.waterIntakes.put(waterIntake);
+      return Future.value();
+    });
+  }
+
+// Get water intake by date
+  Future<WaterIntake?> getWaterIntakeByDate(DateTime date) async {
+    final isar = await _isar;
+    return isar.waterIntakes.where().filter().dateEqualTo(date).findFirst();
+  }
+
+  // Update a WaterIntake
+  Future<void> updateWaterIntake(WaterIntake waterIntake) async {
+    final isar = await _isar;
+    await isar.writeTxn<void>(() {
+      isar.waterIntakes.put(waterIntake);
+      return Future.value();
+    });
+  }
+
+  // Get all WaterIntakes
+  Future<List<WaterIntake>> getWaterIntakes() async {
+    final isar = await _isar;
+    return isar.waterIntakes.where().findAll();
+  }
+
+  // Watch WaterIntakes for changes
+  Stream<List<WaterIntake>> watchWaterIntakes() async* {
+    final isar = await _isar;
+    yield* isar.waterIntakes.where().watch(fireImmediately: true);
   }
 
   // Delete all data
