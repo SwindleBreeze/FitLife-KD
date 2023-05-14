@@ -6,7 +6,7 @@ import 'package:flutter_application_1/models/group.dart';
 import 'package:flutter_application_1/models/exercise.dart';
 import 'package:flutter_application_1/models/user.dart';
 import 'package:flutter_application_1/models/water_intake.dart';
-
+import 'package:flutter_application_1/models/sleep_cycle.dart';
 
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -46,10 +46,9 @@ class IsarService {
       return await Isar.open([
         ExerciseSchema,
         GroupSchema,
-        WaterIntakeSchema
-      ], // Include WaterIntakeSchema
-          inspector: true,
-          directory: path);
+        WaterIntakeSchema,
+        SleepCycleSchema,
+      ], inspector: true, directory: path);
     }
 
     return Future.value(Isar.getInstance());
@@ -201,4 +200,56 @@ class IsarService {
         .group((q) => q.idEqualTo(group.id))
         .findAll();
   }
+
+  // Get all SleepCycles
+  Future<List<SleepCycle>> getAllSleepCycles() async {
+    final isar = await _isar;
+    return isar.sleepCycles.where().findAll();
+  }
+
+  // Get a SleepCycle by ID
+  Future<SleepCycle?> getSleepCycleById(int id) async {
+    final isar = await _isar;
+    return isar.sleepCycles.get(id);
+  }
+
+  // Add a new SleepCycle
+  Future<void> addSleepCycle(SleepCycle sleepCycle) async {
+    final isar = await _isar;
+    await isar.writeTxn(() {
+      return isar.sleepCycles.put(sleepCycle);
+    });
+  }
+
+  // Update a SleepCycle
+  Future<void> updateSleepCycle(SleepCycle sleepCycle) async {
+    final isar = await _isar;
+    await isar.writeTxn(() {
+      return isar.sleepCycles.put(sleepCycle);
+    });
+  }
+
+  // Get a SleepCycle by date
+  Future<SleepCycle?> getSleepCycleByDate(DateTime date) async {
+    final isar = await _isar;
+    return isar.sleepCycles.where().filter().dateEqualTo(date).findFirst();
+  }
+
+
+  Future<List<SleepCycle>> getSleepCyclesBetweenDates(
+      DateTime startDate, DateTime endDate) async {
+    final isar = await _isar;
+
+    final startDateTime =
+        DateTime(startDate.year, startDate.month, startDate.day);
+    final endDateTime = DateTime(endDate.year, endDate.month, endDate.day);
+
+    final sleepCycles = await isar.sleepCycles
+        .where()
+        .filter()
+        .dateBetween(startDateTime, endDateTime)
+        .findAll();
+    return sleepCycles;
+  }
+
 }

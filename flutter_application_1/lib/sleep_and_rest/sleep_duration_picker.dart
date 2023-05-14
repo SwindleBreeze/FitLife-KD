@@ -1,5 +1,12 @@
 import 'package:time_duration_picker/time_duration_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+
+// Models
+import '../models/sleep_cycle.dart';
+
+// Isar service
+import '../isar-db/isar-service.dart';
 
 class SetAlarm extends StatefulWidget {
   const SetAlarm({Key? key}) : super(key: key);
@@ -9,9 +16,41 @@ class SetAlarm extends StatefulWidget {
 }
 
 class _SetAlarmState extends State<SetAlarm> {
+  final isarService = IsarService();
   String alarmTime = "12:00 PM";
   String bedTime = "12:00 AM";
   String sleepDuration = "12 hr 00 min";
+  String avgSleep = "";
+  String yesterdaySleep = "";
+
+  @override
+  void initState() {
+    super.initState();
+    _loadValuesFromDatabase();
+  }
+
+  void _loadValuesFromDatabase() async {
+    avgSleep = await getLast7DayAverageSleepTime();
+    yesterdaySleep = await getYesterdaySleepDuration();
+
+    DateTime currentDate = DateTime.now();
+    currentDate =
+        DateTime(currentDate.year, currentDate.month, currentDate.day);
+
+    SleepCycle? sleepCycle = await isarService.getSleepCycleByDate(currentDate);
+    if (sleepCycle != null) {
+      setState(() {
+        String wakeUpTime1 =
+            DateFormat('hh:mm a').format(sleepCycle.wakeUpTime);
+        String bedTime1 = DateFormat('hh:mm a').format(sleepCycle.bedTime);
+        String dur = formatDuration(sleepCycle.sleepTime);
+
+        alarmTime = wakeUpTime1;
+        bedTime = bedTime1;
+        sleepDuration = dur;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,16 +63,88 @@ class _SetAlarmState extends State<SetAlarm> {
     return SafeArea(
       child: Padding(
         padding: EdgeInsets.symmetric(
-            horizontal: size.width * horizontalPadding,
-            vertical: size.height * verticalPadding),
+            horizontal: size.width * horizontalPadding, vertical: 5),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Container(
+                  alignment: Alignment.center,
+                  width: 100,
+                  child: Text("7 Day Avg."),
+                ),
+                SizedBox(width: 100),
+                Container(
+                    alignment: Alignment.center,
+                    width: 100,
+                    child: Text("Yesterday"))
+              ],
+            ),
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Container(
+                  alignment: Alignment.center,
+                  height: 30.0,
+                  width: 100.0,
+                  decoration: BoxDecoration(
+                    color: Colors.blueAccent,
+                    border: Border.all(
+                      color: Colors.black,
+                      width: 2.0,
+                    ),
+                    borderRadius: BorderRadius.circular(2.0),
+                    gradient: LinearGradient(
+                        colors: [Colors.indigo, Colors.blueAccent]),
+                    boxShadow: [
+                      BoxShadow(
+                          color: Colors.grey,
+                          blurRadius: 2.0,
+                          offset: Offset(2.0, 2.0)),
+                    ],
+                  ),
+                  child: Text(
+                    avgSleep,
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+                SizedBox(width: 100),  
+                Container(
+                  alignment: Alignment.center,
+                  height: 30.0,
+                  width: 100.0,
+                  decoration: BoxDecoration(
+                    color: Colors.blueAccent,
+                    border: Border.all(
+                      color: Colors.black,
+                      width: 2.0,
+                    ),
+                    borderRadius: BorderRadius.circular(2.0),
+                    gradient: LinearGradient(
+                        colors: [Colors.indigo, Colors.blueAccent]),
+                    boxShadow: [
+                      BoxShadow(
+                          color: Colors.grey,
+                          blurRadius: 2.0,
+                          offset: Offset(2.0, 2.0)),
+                    ],
+                  ),
+                  child: Text(
+                    yesterdaySleep,
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ],
+            ),
             SizedBox(height: size.height * smallerMarginRatio * 1.1),
             TimeDurationPicker(
               diameter: size.width * 0.75,
-              icon1Data: Icons.notifications_none,
-              icon2Data: Icons.bed,
+              icon1Data: Icons.bed,
+              icon2Data: Icons.notifications_none,
               knobDecoration:
                   const BoxDecoration(color: Color.fromRGBO(167, 153, 240, 1)),
               clockDecoration: const BoxDecoration(
@@ -56,12 +167,12 @@ class _SetAlarmState extends State<SetAlarm> {
               ),
               onIcon1RotatedCallback: (value) {
                 setState(() {
-                  alarmTime = value;
+                  bedTime = value;
                 });
               },
               onIcon2RotatedCallback: (value) {
                 setState(() {
-                  bedTime = value;
+                  alarmTime = value;
                 });
               },
               setDurationCallback: (value) {
@@ -71,17 +182,54 @@ class _SetAlarmState extends State<SetAlarm> {
               },
             ),
             SizedBox(height: size.height * 2 * smallerMarginRatio * 0.75),
-            Container(
-              alignment: Alignment.center,
-              width: size.width,
+            GestureDetector(
+              child: Container(
+                alignment: Alignment.center,
+                width: size.width * 0.5,
                 child: Text(
                   sleepDuration,
                   style: const TextStyle(
                     fontSize: 28,
-                    color: Color.fromRGBO(88, 97, 130, 1),
+                    color: Color.fromRGBO(77, 88, 170, 1),
                     fontWeight: FontWeight.bold,
                   ),
                 ),
+              ),
+              onTap: () async {
+                // Define the format of the time string
+                DateFormat format = DateFormat("hh:mm a");
+
+                // Parse the time string and convert it to DateTime
+                DateTime bedTimeFixed = format.parse(bedTime);
+                DateTime alarmTimeFixed = format.parse(alarmTime);
+
+                List<String> parts = sleepDuration.split(' ');
+                int hours = int.parse(parts[0]);
+                int minutes = int.parse(parts[2]);
+
+                int totalMinutes = hours * 60 + minutes;
+
+                SleepCycle newSleepCycle = SleepCycle(
+                  date: DateTime.now(),
+                  bedTime: bedTimeFixed,
+                  wakeUpTime: alarmTimeFixed,
+                  sleepTime: totalMinutes,
+                );
+
+                // Check if sleep cycle already exists for the current date
+                SleepCycle? existingSleepCycle =
+                    await isarService.getSleepCycleByDate(newSleepCycle.date);
+                if (existingSleepCycle != null) {
+                  // Update the existing sleep cycle
+                  existingSleepCycle.bedTime = newSleepCycle.bedTime;
+                  existingSleepCycle.wakeUpTime = newSleepCycle.wakeUpTime;
+                  existingSleepCycle.sleepTime = newSleepCycle.sleepTime;
+                  await isarService.updateSleepCycle(existingSleepCycle);
+                } else {
+                  // Add a new sleep cycle
+                  await isarService.addSleepCycle(newSleepCycle);
+                }
+              },
             ),
             SizedBox(height: size.height * 0.85 * smallerMarginRatio),
             Row(
@@ -197,4 +345,63 @@ class _AlarmDescriptionState extends State<AlarmDescription> {
       ),
     );
   }
+}
+
+String formatDuration(int minutes) {
+  int hours = minutes ~/ 60;
+  int remainingMinutes = minutes % 60;
+
+  String formattedDuration = '';
+  if (hours > 0) {
+    formattedDuration += '$hours h ';
+  }
+  formattedDuration += '$remainingMinutes min';
+
+  return formattedDuration;
+}
+
+// Calculate the average sleep time for the last 7 days
+Future<String> getLast7DayAverageSleepTime() async {
+  DateTime currentDate = DateTime.now();
+  DateTime sevenDaysAgo = currentDate.subtract(Duration(days: 6));
+
+  // Fetch sleep cycles from the database for the last 7 days
+  var isarService = IsarService();
+  List<SleepCycle> sleepCycles =
+      await isarService.getSleepCyclesBetweenDates(sevenDaysAgo, currentDate);
+
+  // Calculate the total sleep duration
+  int totalMinutes = 0;
+  for (SleepCycle sleepCycle in sleepCycles) {
+    int sleepDurationMinutes = sleepCycle.sleepTime;
+    totalMinutes += sleepDurationMinutes;
+  }
+
+  // Calculate the average sleep duration
+  double averageMinutes = totalMinutes / sleepCycles.length;
+
+  // Format the average sleep duration as "h h m min"
+  String formattedDuration = formatDuration(averageMinutes.toInt());
+
+  return formattedDuration;
+}
+
+Future<String> getYesterdaySleepDuration() async {
+  DateTime currentDate = DateTime.now();
+  currentDate = DateTime(currentDate.year, currentDate.month, currentDate.day);
+  DateTime yesterday = currentDate.subtract(Duration(days: 1));
+
+  // Fetch sleep cycle from the database for yesterday
+  var isarService = IsarService();
+  SleepCycle? yesterdaySleepCycle =
+      await isarService.getSleepCycleByDate(yesterday);
+
+  // Get the sleep duration in minutes for yesterday
+  int? sleepDurationMinutes = yesterdaySleepCycle?.sleepTime;
+  sleepDurationMinutes ??= 0;
+
+  // Format the sleep duration as "h hr m min"
+  String formattedDuration = formatDuration(sleepDurationMinutes);
+
+  return formattedDuration;
 }

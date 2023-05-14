@@ -14,18 +14,27 @@ class _MySleepPageState extends State<MySleepPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          backgroundColor: Colors.blue,
-          title: Text(
-            'SLEEP TRACKER',
-            style: TextStyle(
-              color: Colors.white,
-              letterSpacing: 4.0,
-              fontStyle: FontStyle.italic,
-            ),
+      appBar: AppBar(
+        centerTitle: true,
+        backgroundColor: Colors.blue,
+        title: Text(
+          'SLEEP TRACKER',
+          style: TextStyle(
+            color: Colors.white,
+            letterSpacing: 4.0,
+            fontStyle: FontStyle.italic,
           ),
         ),
-        body: SetAlarm());
+      ),
+      body: SetAlarm(),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.blue,
+        child: Icon(Icons.analytics_outlined),
+        onPressed: () {
+          // Go to Sleep and Statistics and Trends
+        },
+      ),
+    );
   }
 }
