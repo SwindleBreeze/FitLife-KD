@@ -29,14 +29,7 @@ const GroupSchema = CollectionSchema(
   deserializeProp: _groupDeserializeProp,
   idName: r'id',
   indexes: {},
-  links: {
-    r'exercises': LinkSchema(
-      id: 2731906809111451939,
-      name: r'exercises',
-      target: r'Exercise',
-      single: false,
-    )
-  },
+  links: {},
   embeddedSchemas: {},
   getId: _groupGetId,
   getLinks: _groupGetLinks,
@@ -94,13 +87,11 @@ Id _groupGetId(Group object) {
 }
 
 List<IsarLinkBase<dynamic>> _groupGetLinks(Group object) {
-  return [object.exercises];
+  return [];
 }
 
 void _groupAttach(IsarCollection<dynamic> col, Id id, Group object) {
   object.id = id;
-  object.exercises
-      .attach(col, col.isar.collection<Exercise>(), r'exercises', id);
 }
 
 extension GroupQueryWhereSort on QueryBuilder<Group, Group, QWhere> {
@@ -362,63 +353,7 @@ extension GroupQueryFilter on QueryBuilder<Group, Group, QFilterCondition> {
 
 extension GroupQueryObject on QueryBuilder<Group, Group, QFilterCondition> {}
 
-extension GroupQueryLinks on QueryBuilder<Group, Group, QFilterCondition> {
-  QueryBuilder<Group, Group, QAfterFilterCondition> exercises(
-      FilterQuery<Exercise> q) {
-    return QueryBuilder.apply(this, (query) {
-      return query.link(q, r'exercises');
-    });
-  }
-
-  QueryBuilder<Group, Group, QAfterFilterCondition> exercisesLengthEqualTo(
-      int length) {
-    return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'exercises', length, true, length, true);
-    });
-  }
-
-  QueryBuilder<Group, Group, QAfterFilterCondition> exercisesIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'exercises', 0, true, 0, true);
-    });
-  }
-
-  QueryBuilder<Group, Group, QAfterFilterCondition> exercisesIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'exercises', 0, false, 999999, true);
-    });
-  }
-
-  QueryBuilder<Group, Group, QAfterFilterCondition> exercisesLengthLessThan(
-    int length, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'exercises', 0, true, length, include);
-    });
-  }
-
-  QueryBuilder<Group, Group, QAfterFilterCondition> exercisesLengthGreaterThan(
-    int length, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'exercises', length, include, 999999, true);
-    });
-  }
-
-  QueryBuilder<Group, Group, QAfterFilterCondition> exercisesLengthBetween(
-    int lower,
-    int upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.linkLength(
-          r'exercises', lower, includeLower, upper, includeUpper);
-    });
-  }
-}
+extension GroupQueryLinks on QueryBuilder<Group, Group, QFilterCondition> {}
 
 extension GroupQuerySortBy on QueryBuilder<Group, Group, QSortBy> {
   QueryBuilder<Group, Group, QAfterSortBy> sortByName() {

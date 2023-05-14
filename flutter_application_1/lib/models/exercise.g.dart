@@ -17,8 +17,13 @@ const ExerciseSchema = CollectionSchema(
   name: r'Exercise',
   id: 2972066467915231902,
   properties: {
-    r'name': PropertySchema(
+    r'groupid': PropertySchema(
       id: 0,
+      name: r'groupid',
+      type: IsarType.long,
+    ),
+    r'name': PropertySchema(
+      id: 1,
       name: r'name',
       type: IsarType.string,
     )
@@ -29,15 +34,7 @@ const ExerciseSchema = CollectionSchema(
   deserializeProp: _exerciseDeserializeProp,
   idName: r'id',
   indexes: {},
-  links: {
-    r'group': LinkSchema(
-      id: 3773472523165790847,
-      name: r'group',
-      target: r'Group',
-      single: false,
-      linkName: r'exercises',
-    )
-  },
+  links: {},
   embeddedSchemas: {},
   getId: _exerciseGetId,
   getLinks: _exerciseGetLinks,
@@ -61,7 +58,8 @@ void _exerciseSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeString(offsets[0], object.name);
+  writer.writeLong(offsets[0], object.groupid);
+  writer.writeString(offsets[1], object.name);
 }
 
 Exercise _exerciseDeserialize(
@@ -71,8 +69,9 @@ Exercise _exerciseDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = Exercise();
+  object.groupid = reader.readLong(offsets[0]);
   object.id = id;
-  object.name = reader.readString(offsets[0]);
+  object.name = reader.readString(offsets[1]);
   return object;
 }
 
@@ -84,6 +83,8 @@ P _exerciseDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
+      return (reader.readLong(offset)) as P;
+    case 1:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -95,12 +96,11 @@ Id _exerciseGetId(Exercise object) {
 }
 
 List<IsarLinkBase<dynamic>> _exerciseGetLinks(Exercise object) {
-  return [object.group];
+  return [];
 }
 
 void _exerciseAttach(IsarCollection<dynamic> col, Id id, Exercise object) {
   object.id = id;
-  object.group.attach(col, col.isar.collection<Group>(), r'group', id);
 }
 
 extension ExerciseQueryWhereSort on QueryBuilder<Exercise, Exercise, QWhere> {
@@ -180,6 +180,59 @@ extension ExerciseQueryWhere on QueryBuilder<Exercise, Exercise, QWhereClause> {
 
 extension ExerciseQueryFilter
     on QueryBuilder<Exercise, Exercise, QFilterCondition> {
+  QueryBuilder<Exercise, Exercise, QAfterFilterCondition> groupidEqualTo(
+      int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'groupid',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Exercise, Exercise, QAfterFilterCondition> groupidGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'groupid',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Exercise, Exercise, QAfterFilterCondition> groupidLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'groupid',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Exercise, Exercise, QAfterFilterCondition> groupidBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'groupid',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
   QueryBuilder<Exercise, Exercise, QAfterFilterCondition> idEqualTo(Id value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -367,66 +420,21 @@ extension ExerciseQueryObject
     on QueryBuilder<Exercise, Exercise, QFilterCondition> {}
 
 extension ExerciseQueryLinks
-    on QueryBuilder<Exercise, Exercise, QFilterCondition> {
-  QueryBuilder<Exercise, Exercise, QAfterFilterCondition> group(
-      FilterQuery<Group> q) {
-    return QueryBuilder.apply(this, (query) {
-      return query.link(q, r'group');
-    });
-  }
-
-  QueryBuilder<Exercise, Exercise, QAfterFilterCondition> groupLengthEqualTo(
-      int length) {
-    return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'group', length, true, length, true);
-    });
-  }
-
-  QueryBuilder<Exercise, Exercise, QAfterFilterCondition> groupIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'group', 0, true, 0, true);
-    });
-  }
-
-  QueryBuilder<Exercise, Exercise, QAfterFilterCondition> groupIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'group', 0, false, 999999, true);
-    });
-  }
-
-  QueryBuilder<Exercise, Exercise, QAfterFilterCondition> groupLengthLessThan(
-    int length, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'group', 0, true, length, include);
-    });
-  }
-
-  QueryBuilder<Exercise, Exercise, QAfterFilterCondition>
-      groupLengthGreaterThan(
-    int length, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'group', length, include, 999999, true);
-    });
-  }
-
-  QueryBuilder<Exercise, Exercise, QAfterFilterCondition> groupLengthBetween(
-    int lower,
-    int upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.linkLength(
-          r'group', lower, includeLower, upper, includeUpper);
-    });
-  }
-}
+    on QueryBuilder<Exercise, Exercise, QFilterCondition> {}
 
 extension ExerciseQuerySortBy on QueryBuilder<Exercise, Exercise, QSortBy> {
+  QueryBuilder<Exercise, Exercise, QAfterSortBy> sortByGroupid() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'groupid', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Exercise, Exercise, QAfterSortBy> sortByGroupidDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'groupid', Sort.desc);
+    });
+  }
+
   QueryBuilder<Exercise, Exercise, QAfterSortBy> sortByName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.asc);
@@ -442,6 +450,18 @@ extension ExerciseQuerySortBy on QueryBuilder<Exercise, Exercise, QSortBy> {
 
 extension ExerciseQuerySortThenBy
     on QueryBuilder<Exercise, Exercise, QSortThenBy> {
+  QueryBuilder<Exercise, Exercise, QAfterSortBy> thenByGroupid() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'groupid', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Exercise, Exercise, QAfterSortBy> thenByGroupidDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'groupid', Sort.desc);
+    });
+  }
+
   QueryBuilder<Exercise, Exercise, QAfterSortBy> thenById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
@@ -469,6 +489,12 @@ extension ExerciseQuerySortThenBy
 
 extension ExerciseQueryWhereDistinct
     on QueryBuilder<Exercise, Exercise, QDistinct> {
+  QueryBuilder<Exercise, Exercise, QDistinct> distinctByGroupid() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'groupid');
+    });
+  }
+
   QueryBuilder<Exercise, Exercise, QDistinct> distinctByName(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -482,6 +508,12 @@ extension ExerciseQueryProperty
   QueryBuilder<Exercise, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
+    });
+  }
+
+  QueryBuilder<Exercise, int, QQueryOperations> groupidProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'groupid');
     });
   }
 

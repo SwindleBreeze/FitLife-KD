@@ -8,7 +8,5 @@ part 'exercise.g.dart';
 class Exercise {
   Id id = Isar.autoIncrement;
   late String name;
-
-  @Backlink(to: "exercises")
-  final group = IsarLinks<Group>();
+  late int groupid;
 }
