@@ -161,6 +161,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.3"
+  csslib:
+    dependency: transitive
+    description:
+      name: csslib
+      sha256: b36c7f7e24c0bdf1bf9a3da461c837d1de64b9f8beb190c9011d8c72a3dfd745
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.17.2"
   dart_style:
     dependency: transitive
     description:
@@ -243,6 +251,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_widget_from_html_core:
+    dependency: "direct main"
+    description:
+      name: flutter_widget_from_html_core
+      sha256: "2ee1f47662f5ba34fe535915b034fae0450bc0a15ae6935ca4abcc7fa987e948"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.10.0"
   frontend_server_client:
     dependency: transitive
     description:
@@ -251,6 +267,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.2.0"
+  fwfh_text_style:
+    dependency: transitive
+    description:
+      name: fwfh_text_style
+      sha256: "37806ee0222f79b6e8d4c698c322c897eae6a817258156f40aeece4e588fac60"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.22.08+1"
   glob:
     dependency: transitive
     description:
@@ -267,6 +291,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.2.0"
+  html:
+    dependency: transitive
+    description:
+      name: html
+      sha256: "58e3491f7bf0b6a4ea5110c0c688877460d1a6366731155c4a4580e7ded773e8"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.15.3"
   http:
     dependency: "direct main"
     description:
@@ -531,6 +563,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.2.2"
+  rxdart:
+    dependency: transitive
+    description:
+      name: rxdart
+      sha256: "0c7c0cedd93788d996e33041ffecda924cc54389199cde4e6a34b440f50044cb"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.27.7"
   shelf:
     dependency: transitive
     description:
@@ -576,6 +616,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.11.0"
+  stop_watch_timer:
+    dependency: "direct main"
+    description:
+      name: stop_watch_timer
+      sha256: eb690e4f6d983ba12ddfbf51a5d489fdba8b64982b9651cb538650888cec2886
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0"
   stream_channel:
     dependency: transitive
     description:
@@ -706,4 +754,4 @@ packages:
     version: "3.1.2"
 sdks:
   dart: ">=2.19.4 <3.0.0"
-  flutter: ">=3.3.0"
+  flutter: ">=3.7.0-0"

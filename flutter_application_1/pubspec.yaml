@@ -21,6 +21,10 @@ dependencies:
   path_provider: ^2.0.0
   http: ^0.13.6
   intl: ^0.18.1
+  stop_watch_timer: ^2.0.0
+  flutter_widget_from_html_core: ^0.10.0
+  # flutter_widget_from_html: ^0.10.0
+  # flutter_html: ^2.1.2
 
 dev_dependencies:
   flutter_test:

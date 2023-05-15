@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'add_water_page/add_water_page.dart';
 import 'sleep_and_rest/main_page.dart';
 import 'choose_exercise/display_exercises.dart';
+//import 'choose_exercise/exercise_popup.dart';
 
 import 'isar-db/isar-service.dart';
 
@@ -123,36 +124,6 @@ class _MyHomePageState extends State<MyHomePage> {
               );
             },
           ),
-          // Exercise
-          GestureDetector(
-            child: AnimatedContainer(
-              duration: Duration(milliseconds: 700),
-              height: 45,
-              width: 45,
-              margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
-              decoration: BoxDecoration(
-                color: tmpColor,
-                shape: BoxShape.circle,
-                border: Border.all(color: Colors.blueAccent),
-              ),
-              child: Icon(
-                Icons.self_improvement_sharp,
-                color: Colors.blue,
-              ),
-            ),
-            onTap: () {
-              setState(() {
-                tmpColor = Color.fromARGB(255, 2, 33, 58);
-              });
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => display_exercise(
-                          groupName: 'Pull',
-                        )),
-              );
-            },
-          ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -174,13 +145,16 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 onTap: () {
                   print("Legs was pressed");
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => display_exercise(
-                              groupName: 'Legs',
-                            )),
-                  );
+                  Future.delayed(Duration.zero, () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DisplayExercise(
+                          groupName: 'Legs',
+                        ),
+                      ),
+                    );
+                  });
                 },
               ),
               PopupMenuDivider(
@@ -194,13 +168,16 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 onTap: () {
                   print("Push was pressed");
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => display_exercise(
-                              groupName: 'Push',
-                            )),
-                  );
+                  Future.delayed(Duration.zero, () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DisplayExercise(
+                          groupName: 'Push',
+                        ),
+                      ),
+                    );
+                  });
                 },
               ),
               PopupMenuDivider(
@@ -214,13 +191,16 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 onTap: () {
                   print("Pull was pressed");
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => display_exercise(
-                              groupName: 'Pull',
-                            )),
-                  );
+                  Future.delayed(Duration.zero, () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DisplayExercise(
+                          groupName: 'Pull',
+                        ),
+                      ),
+                    );
+                  });
                 },
               ),
             ],

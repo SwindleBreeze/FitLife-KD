@@ -1,21 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/isar-db/isar-service.dart';
+import 'package:flutter_application_1/models/exercise.dart';
+
+import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
+import 'package:isar/isar.dart';
 
 import 'begin_exercise_button.dart';
+import 'exercise_popup.dart';
 
-class display_exercise extends StatefulWidget {
+class DisplayExercise extends StatefulWidget {
   final String groupName;
-
   final isar_service = IsarService();
 
-  display_exercise({required this.groupName});
+  DisplayExercise({required this.groupName});
 
   @override
-  _display_exerciseState createState() => _display_exerciseState();
+  DisplayExerciseState createState() => DisplayExerciseState();
 }
 
-class _display_exerciseState extends State<display_exercise> {
-  late List<String> _exercises;
+class DisplayExerciseState extends State<DisplayExercise> {
+  late List<Exercise> _exercises = [];
+
+  late Id groupid;
 
   @override
   void initState() {
@@ -26,10 +32,13 @@ class _display_exerciseState extends State<display_exercise> {
   Future<void> _getExercises() async {
     final isar = IsarService.instance;
     final allExercises = await isar.getExercises();
-    final exerciseNames = allExercises.map((e) => e.name).toList();
 
-    final exercises =
-        exerciseNames.where((e) => e == widget.groupName).toList();
+    final allGroups = await isar.getGroups();
+    // find group id by widget.GroupName
+    final groupId = allGroups.firstWhere((g) => g.name == widget.groupName).id;
+    groupid = groupId;
+    // find exercises where exercise group is groupId
+    final exercises = allExercises.where((e) => e.groupid == groupId).toList();
 
     setState(() {
       _exercises = exercises;
@@ -50,7 +59,7 @@ class _display_exerciseState extends State<display_exercise> {
               itemBuilder: (context, index) {
                 final exercise = _exercises[index];
                 return begin_exercise_button(
-                  exercise: exercise,
+                  exercise: exercise.name,
                   onPressed: () {
                     Navigator.push(
                       context,
@@ -66,13 +75,101 @@ class _display_exerciseState extends State<display_exercise> {
           ),
         ],
       ),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            ElevatedButton.icon(
+              onPressed: () {
+                // Show a dialog with a form for inserting exercise name and description
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    String exerciseName = '';
+                    String exerciseDescription = '';
+                    return AlertDialog(
+                      title: Text('Add Exercise'),
+                      content: SingleChildScrollView(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            TextField(
+                              decoration: InputDecoration(
+                                labelText: 'Exercise Name',
+                              ),
+                              onChanged: (value) {
+                                exerciseName = value;
+                              },
+                            ),
+                            TextField(
+                              decoration: InputDecoration(
+                                labelText: 'Exercise Description',
+                              ),
+                              onChanged: (value) {
+                                exerciseDescription = value;
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Text('CANCEL'),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            // Add the exercise to the list
+                            Exercise newExercise = Exercise()
+                              ..name = exerciseName
+                              ..description = exerciseDescription;
+                            newExercise.groupid = groupid;
+                            widget.isar_service.addExercise(newExercise);
+                            setState(() {
+                              _exercises.add(newExercise);
+                            });
+
+                            Navigator.of(context).pop();
+                          },
+                          child: Text('ADD'),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+              icon: Icon(Icons.add),
+              label: Text("Add Exercise"),
+            ),
+            ElevatedButton.icon(
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return ExerciseModal(
+                      onPressed: () {
+                        // do something when the BeginExerciseButton is pressed
+                      },
+                      exercises: _exercises,
+                    );
+                  },
+                );
+              },
+              icon: Icon(Icons.timer),
+              label: Text("Begin Exercise"),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
 
 class ExerciseDetails extends StatefulWidget {
-  final String exercise;
-
+  final Exercise exercise;
   ExerciseDetails({required this.exercise});
 
   @override
@@ -84,10 +181,13 @@ class _ExerciseDetailsState extends State<ExerciseDetails> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.exercise),
+        title: Text(widget.exercise.name),
       ),
       body: Center(
-        child: Text('Details for ${widget.exercise}'),
+        child: Padding(
+          padding: EdgeInsets.all(16.0),
+          child: HtmlWidget(widget.exercise.description),
+        ),
       ),
     );
   }

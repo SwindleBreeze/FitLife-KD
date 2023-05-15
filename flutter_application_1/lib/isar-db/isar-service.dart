@@ -4,10 +4,10 @@ import 'dart:io';
 import 'package:isar/isar.dart';
 import 'package:flutter_application_1/models/group.dart';
 import 'package:flutter_application_1/models/exercise.dart';
-import 'package:flutter_application_1/models/user.dart';
 import 'package:flutter_application_1/models/water_intake.dart';
 import 'package:flutter_application_1/models/sleep_cycle.dart';
-
+import 'package:flutter_application_1/models/workout.dart';
+import 'package:flutter_application_1/models/finished_exercise.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -47,6 +47,8 @@ class IsarService {
         ExerciseSchema,
         GroupSchema,
         WaterIntakeSchema,
+        WorkoutSchema,
+        FinishedExerciseSchema,
         SleepCycleSchema,
       ], inspector: true, directory: path);
     }
@@ -79,19 +81,25 @@ class IsarService {
 
       // Add exercises to groups and links to exercises
       for (var ex in pullExercises) {
-        final exercise = Exercise()..name = ex['name'];
+        final exercise = Exercise()
+          ..name = ex['name']
+          ..description = ex['description'];
         exercise.groupid = pull.id;
         await isar.exercises.put(exercise);
       }
 
       for (var ex in pushExercises) {
-        final exercise = Exercise()..name = ex['name'];
+        final exercise = Exercise()
+          ..name = ex['name']
+          ..description = ex['description'];
         exercise.groupid = push.id;
         await isar.exercises.put(exercise);
       }
 
       for (var ex in legsExercises) {
-        final exercise = Exercise()..name = ex['name'];
+        final exercise = Exercise()
+          ..name = ex['name']
+          ..description = ex['description'];
         exercise.groupid = legs.id;
         await isar.exercises.put(exercise);
       }
@@ -104,15 +112,16 @@ class IsarService {
     final response = await http.get(Uri.parse(
         'https://wger.de/api/v2/exercise/?language=2&category=${category}'));
     final exercises = jsonDecode(response.body)['results'];
-    return exercises.take(30).toList();
+    return exercises.take(10).toList();
   }
 
   // Insert exercise (expected Exercise object)
+// Insert exercise (expected Exercise object)
   Future<void> addExercise(Exercise exercise) async {
     final isar = await _isar;
-    isar.writeTxn<Exercise>(() {
+    await isar.writeTxn<Exercise>(() {
       isar.exercises.put(exercise);
-      return Future.value(exercise.id as FutureOr<Exercise>?);
+      return Future.value(exercise);
     });
   }
 
@@ -235,7 +244,6 @@ class IsarService {
     return isar.sleepCycles.where().filter().dateEqualTo(date).findFirst();
   }
 
-
   Future<List<SleepCycle>> getSleepCyclesBetweenDates(
       DateTime startDate, DateTime endDate) async {
     final isar = await _isar;
@@ -252,4 +260,49 @@ class IsarService {
     return sleepCycles;
   }
 
+  // add Workouts
+  Future<void> addWorkout(Workout workout) async {
+    final isar = await _isar;
+    print(workout);
+    await isar.writeTxn(() {
+      return isar.workouts.put(workout);
+    });
+  }
+
+  // Get all Workouts
+  Future<List<Workout>> getWorkouts() async {
+    final isar = await _isar;
+    return isar.workouts.where().findAll();
+  }
+
+  // Insert FinishedExercise
+  Future<void> addFinishedExercise(FinishedExercise finishedExercise) async {
+    final isar = await _isar;
+    await isar.writeTxn(() {
+      return isar.finishedExercises.put(finishedExercise);
+    });
+  }
+
+  // Get all FinishedExercises
+  Future<List<FinishedExercise>> getFinishedExercises() async {
+    final isar = await _isar;
+    return isar.finishedExercises.where().findAll();
+  }
+
+  // Update duration of last workout
+  Future<void> updateLastWorkoutDuration(int duration) async {
+    final isar = await _isar;
+    final lastWorkout = await isar.workouts.where().findAll();
+    lastWorkout.last.duration = duration;
+    await isar.writeTxn(() {
+      return isar.workouts.put(lastWorkout.last);
+    });
+  }
+
+  // get last workout
+  Future<Workout?> getLastWorkout() async {
+    final isar = await _isar;
+    final lastWorkout = await isar.workouts.where().findAll();
+    return lastWorkout.last;
+  }
 }
