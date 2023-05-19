@@ -243,6 +243,9 @@ class _ExerciseHandlerState extends State<ExerciseHandler> {
                                 .add(StopWatchExecute.stop);
                             widget.isar_service.updateLastWorkoutDuration(
                                 _stopWatchTimer.rawTime.value);
+
+                            // To do: Rebuild calendar
+
                             Navigator.of(context).pop();
                             Navigator.of(context).pop();
                             Navigator.of(context).pop();

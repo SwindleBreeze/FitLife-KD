@@ -1,13 +1,20 @@
-import 'dart:developer';
+/*
+  To do:
+  * make sure that whenever the new Workout is added to DB (workout is finished),
+    that you update the event lists (call _updateEventsFromDB)
+    
+*/
 
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'add_water_page/add_water_page.dart';
+import 'components/workout_details_screen.dart';
+import 'models/workout.dart';
 import 'sleep_and_rest/main_page.dart';
 import 'choose_exercise/display_exercises.dart';
-//import 'choose_exercise/exercise_popup.dart';
+import 'package:table_calendar/table_calendar.dart';
 
 import 'isar-db/isar-service.dart';
 
@@ -15,13 +22,14 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final isar = IsarService();
   await isar.insertIfEmpty();
-  runApp(MyApp());
+
+  runApp(
+    MyApp(),
+  );
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-  // final isar_service = IsarService();
-  // This widget is the root of your application.
 
   @override
   Widget build(BuildContext context) {
@@ -50,11 +58,61 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final _isar = IsarService();
+  late DateTime _selectedDate;
+  Map<String, List<Event>> _events = {
+    "1999-9-9": [Event("first")]
+  };
+
+  // Workout modal variables
+  int wID = 0;
+
   Color tmpColor = Colors.white;
-  bool _isDropdownOpen = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedDate = DateTime.now();
+    _updateEventsFromDB(_isar);
+  }
+
+  int workoutIdFormat(String strWorkoutID) {
+
+    strWorkoutID = strWorkoutID.substring(1);
+    strWorkoutID = strWorkoutID.substring(0, strWorkoutID.length - 1);
+    int wID = int.parse(strWorkoutID);
+
+    return wID;
+  }
+
+  Future<void> _updateEventsFromDB(IsarService isar) async {
+    // Get the list of workouts from the IsarService
+    List<Workout> workouts = await isar.getWorkouts();
+
+    // Create an empty map to store the events
+    Map<String, List<Event>> events = {};
+
+    // Iterate over the workouts and add them to the events map
+    for (Workout workout in workouts) {
+      // Convert the workout date to a string key for the map
+      String key = workout.date.toIso8601String().substring(0, 10);
+
+      // Create an Event object from the workout
+      Event event = Event(workout.id.toString());
+
+      // Add the event to the list of events for this date
+      events.putIfAbsent(key, () => []).add(event);
+    }
+
+    setState(() {
+      _events = events;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color.fromARGB(255, 229, 233, 241),
       appBar: AppBar(
         title: Text(
           "FITLIFE",
@@ -67,64 +125,159 @@ class _MyHomePageState extends State<MyHomePage> {
         shadowColor: Colors.blue,
         backgroundColor: Colors.blue,
       ),
-      body: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          // Water
-          GestureDetector(
-            child: AnimatedContainer(
-              duration: Duration(milliseconds: 700),
-              height: 45,
-              width: 45,
-              margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
-              decoration: BoxDecoration(
-                color: tmpColor,
-                shape: BoxShape.circle,
-                border: Border.all(color: Colors.blueAccent),
+      body: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            TableCalendar(
+              calendarBuilders: CalendarBuilders(
+                markerBuilder: (context, date, events) {
+                  if (events.isNotEmpty) {
+                    return Container(
+                      width: 45,
+                      height: 45,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                            color: Color.fromARGB(255, 0, 34, 79), width: 5),
+                        shape: BoxShape.rectangle,
+                      ),
+                    );
+                  }
+                  return null;
+                },
               ),
-              child: Icon(
-                Icons.water_drop,
-                color: Colors.blue,
+              selectedDayPredicate: (date) {
+                return isSameDay(date, _selectedDate);
+              },
+              onDaySelected: (date, events) {
+                setState(() {
+                  String day = date
+                      .toString()
+                      .substring(0, date.toIso8601String().length - 1)
+                      .substring(0, 10);
+                  _selectedDate = date;
+
+                  if(_events.containsKey(day))
+                  {
+                    int id = workoutIdFormat(_events[day].toString());
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            WorkoutDetailsScreen(workoutId: id),
+                      ),
+                    );
+                  }
+                });
+              },
+              pageAnimationEnabled: true,
+              pageJumpingEnabled: true,
+              onCalendarCreated: (pageController) {
+                _updateEventsFromDB(_isar);
+              },
+              calendarFormat: CalendarFormat.week,
+              startingDayOfWeek: StartingDayOfWeek.monday,
+              calendarStyle: CalendarStyle(
+                // slecetedDecoration & todayDecoration
+              selectedDecoration: BoxDecoration(
+                  gradient: RadialGradient(
+                    radius: 0.9,
+                    colors: [Colors.blue, Colors.purple],
+                  ),
+                ),
+
+                isTodayHighlighted: false,
+                weekendDecoration: BoxDecoration(
+                  gradient: RadialGradient(
+                    radius: 0.9,
+                    colors: [Colors.blue, Colors.purple],
+                  ),
+                ),
+                defaultDecoration: BoxDecoration(
+                  gradient: RadialGradient(
+                    radius: 0.9,
+                    colors: [Colors.blue, Colors.purple],
+                  ),
+                ),
+                markersAlignment: Alignment.center,
               ),
+              headerStyle: HeaderStyle(
+                titleCentered: true,
+                formatButtonVisible: false,
+              ),
+              firstDay: DateTime(2022, 5, 5),
+              lastDay: DateTime(2024, 5, 5),
+              focusedDay: _selectedDate,
+              eventLoader: (day) {
+                return _getEventsForDay(day);
+              },
             ),
-            onTap: () {
-              setState(() {
-                tmpColor = Color.fromARGB(255, 2, 33, 58);
-              });
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => AddWaterPage()),
-              );
-            },
-          ),
-          // Sleep
-          GestureDetector(
-            child: AnimatedContainer(
-              duration: Duration(milliseconds: 700),
-              height: 45,
-              width: 45,
-              margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
-              decoration: BoxDecoration(
-                color: tmpColor,
-                shape: BoxShape.circle,
-                border: Border.all(color: Colors.blueAccent),
-              ),
-              child: Icon(
-                Icons.self_improvement_sharp,
-                color: Colors.blue,
-              ),
+            SizedBox(height: 20),
+
+            // Other UI components
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // Water
+                GestureDetector(
+                  child: AnimatedContainer(
+                    duration: Duration(milliseconds: 700),
+                    height: 45,
+                    width: 45,
+                    margin:
+                        EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
+                    decoration: BoxDecoration(
+                      color: tmpColor,
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Colors.blueAccent),
+                    ),
+                    child: Icon(
+                      Icons.water_drop,
+                      color: Colors.blue,
+                    ),
+                  ),
+                  onTap: () {
+                    setState(() {
+                      tmpColor = Color.fromARGB(255, 2, 33, 58);
+                    });
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => AddWaterPage()),
+                    );
+                  },
+                ),
+                // Sleep
+                GestureDetector(
+                  child: AnimatedContainer(
+                    duration: Duration(milliseconds: 700),
+                    height: 45,
+                    width: 45,
+                    margin:
+                        EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
+                    decoration: BoxDecoration(
+                      color: tmpColor,
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Colors.blueAccent),
+                    ),
+                    child: Icon(
+                      Icons.self_improvement_sharp,
+                      color: Colors.blue,
+                    ),
+                  ),
+                  onTap: () {
+                    setState(() {
+                      tmpColor = Color.fromARGB(255, 2, 33, 58);
+                    });
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => MySleepPage()),
+                    );
+                  },
+                ),
+              ],
             ),
-            onTap: () {
-              setState(() {
-                tmpColor = Color.fromARGB(255, 2, 33, 58);
-              });
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => MySleepPage()),
-              );
-            },
-          ),
-        ],
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -210,4 +363,21 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
+
+  List<Event> _getEventsForDay(DateTime day) {
+    String formattedDay = day
+        .toString()
+        .substring(0, day.toIso8601String().length - 1)
+        .substring(0, 10);
+    return _events[formattedDay] ?? [];
+  }
+}
+
+class Event {
+  final String title;
+
+  const Event(this.title);
+
+  @override
+  String toString() => title;
 }

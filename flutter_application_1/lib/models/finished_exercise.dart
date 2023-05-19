@@ -11,6 +11,7 @@ class FinishedExercise {
   late DateTime date;
   late int exerciseId;
   late int workoutId;
+  String exerciseName = "";
 
   FinishedExercise(
       {required this.sets,

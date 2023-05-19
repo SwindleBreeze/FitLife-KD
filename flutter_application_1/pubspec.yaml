@@ -23,6 +23,10 @@ dependencies:
   intl: ^0.18.1
   stop_watch_timer: ^2.0.0
   flutter_widget_from_html_core: ^0.10.0
+  horizontal_week_calendar: ^0.0.10
+  calendar_timeline: ^1.1.2
+  table_calendar: ^3.0.9
+  backdrop_modal_route: ^2.0.2
   # flutter_widget_from_html: ^0.10.0
   # flutter_html: ^2.1.2
 

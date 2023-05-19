@@ -125,6 +125,8 @@ class IsarService {
     });
   }
 
+  
+
   // Insert group (expected Group object)
   Future<void> addGroup(Group group) async {
     final isar = await _isar;
@@ -144,6 +146,13 @@ class IsarService {
   Future<List<Exercise>> getExercises() async {
     final isar = await _isar;
     return isar.exercises.where().findAll();
+  }
+
+// Get Exercise by ID
+    Future<Exercise?> getExerciseById(int eID) async {
+    final isar = await _isar;
+
+    return isar.exercises.get(eID);
   }
 
   // Watch groups for changes
@@ -289,6 +298,17 @@ class IsarService {
     return isar.finishedExercises.where().findAll();
   }
 
+// Get all FinishedExercises for a certain workoutName
+  Future<List<FinishedExercise>> getFinishedExercisesForWorkout(int wID) async {
+    final isar = await _isar;
+
+    return isar.finishedExercises
+        .where()
+        .filter()
+        .workoutIdEqualTo(wID)
+        .findAll();
+  }
+
   // Update duration of last workout
   Future<void> updateLastWorkoutDuration(int duration) async {
     final isar = await _isar;
@@ -304,5 +324,11 @@ class IsarService {
     final isar = await _isar;
     final lastWorkout = await isar.workouts.where().findAll();
     return lastWorkout.last;
+  }
+
+  // Get workout by ID
+  Future<Workout?> getWorkoutById(int id) async {
+    final isar = await _isar;
+    return isar.workouts.get(id);
   }
 }
