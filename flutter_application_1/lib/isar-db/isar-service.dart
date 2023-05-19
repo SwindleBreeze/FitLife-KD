@@ -15,6 +15,8 @@ import 'dart:convert';
 // to build all isar and models use "flutter pub run build_runner build --delete-conflicting-outputs" in terminal
 import 'package:path_provider/path_provider.dart';
 
+import '../models/user.dart';
+
 class IsarService {
   static final IsarService _singleton = IsarService._internal();
 
@@ -50,6 +52,7 @@ class IsarService {
         WorkoutSchema,
         FinishedExerciseSchema,
         SleepCycleSchema,
+        UserSchema
       ], inspector: true, directory: path);
     }
 
@@ -68,6 +71,7 @@ class IsarService {
       final pull = Group()..name = "Pull";
       final push = Group()..name = "Push";
       final legs = Group()..name = "Legs";
+      final user = User();
 
       // Add groups to the database
       await isar.groups.putAll([pull, push, legs]);
@@ -103,6 +107,8 @@ class IsarService {
         exercise.groupid = legs.id;
         await isar.exercises.put(exercise);
       }
+
+      isar.users.put(user);
     });
 
     return Future.value(Isar.getInstance());
@@ -331,4 +337,11 @@ class IsarService {
     final isar = await _isar;
     return isar.workouts.get(id);
   }
+
+  // Get user by ID
+    Future<User?> getUserById(int id) async {
+    final isar = await _isar;
+    return isar.users.get(id);
+  }
+  
 }

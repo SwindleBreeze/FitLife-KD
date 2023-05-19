@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
 // My widgets
+import '../models/user.dart';
 import 'progress_indicator.dart';
 import 'water_intake_button.dart';
 import 'counting_widget.dart';
@@ -23,13 +24,23 @@ class AddWaterPage extends StatefulWidget {
 
 class _AddWaterPageState extends State<AddWaterPage> {
   final isarService = IsarService();
+
   double waterIntake = 0; // The amount of water added
   double maxWaterIntake = 3; // The maximum amount of water intake in liters
   bool _sliderNeeded = false;
   Color _color = Colors.purple;
 
   @override
-  void initState() {
+  void initState() async {
+
+    // check if user has access (premium)
+    User? user = await isarService.getUserById(1);
+
+    if(user?.premium == false)
+    {
+      // Route to get premium page
+    }
+
     super.initState();
     _loadWaterIntake();
   }

@@ -27,6 +27,9 @@ dependencies:
   calendar_timeline: ^1.1.2
   table_calendar: ^3.0.9
   backdrop_modal_route: ^2.0.2
+  fl_chart: ^0.62.0
+  chart_sparkline: ^1.0.13
+  d_chart: ^2.2.11
   # flutter_widget_from_html: ^0.10.0
   # flutter_html: ^2.1.2
 
