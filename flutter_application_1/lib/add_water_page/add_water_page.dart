@@ -29,7 +29,6 @@ class _AddWaterPageState extends State<AddWaterPage> {
   double maxWaterIntake = 3; // The maximum amount of water intake in liters
   bool _sliderNeeded = false;
   Color _color = Colors.purple;
-
   @override
   void initState() async {
 
