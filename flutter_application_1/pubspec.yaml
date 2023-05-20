@@ -30,6 +30,8 @@ dependencies:
   fl_chart: ^0.62.0
   chart_sparkline: ^1.0.13
   d_chart: ^2.2.11
+  flutter_vector_icons: ^2.0.0
+  google_fonts: ^4.0.4
   # flutter_widget_from_html: ^0.10.0
   # flutter_html: ^2.1.2
 

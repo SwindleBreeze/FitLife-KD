@@ -68,9 +68,42 @@ class _ExerciseHandlerState extends State<ExerciseHandler> {
     showDialog(
       context: context,
       builder: (context) {
-        int _repetitions = 0;
-        int _sets = 0;
-        int _resistance = 0;
+        int? _repetitions;
+        int? _sets;
+        int? _resistance;
+        String _repetitionsError = '';
+        String _setsError = '';
+        String _resistanceError = '';
+
+        void validateInput(String value, String inputName) {
+          if (value.isEmpty) {
+            // Clear error message if the field is empty
+            if (inputName == 'repetitions')
+              _repetitionsError = '';
+            else if (inputName == 'sets')
+              _setsError = '';
+            else if (inputName == 'resistance') _resistanceError = '';
+          } else {
+            final parsedValue = int.tryParse(value);
+            if (parsedValue == null) {
+              // Set error message if the input cannot be parsed as an integer
+              if (inputName == 'repetitions')
+                _repetitionsError = 'Please input only whole numbers';
+              else if (inputName == 'sets')
+                _setsError = 'Please input only whole numbers';
+              else if (inputName == 'resistance')
+                _resistanceError = 'Please input only whole numbers';
+            } else {
+              // Clear error message if the input is a valid number
+              if (inputName == 'repetitions')
+                _repetitionsError = '';
+              else if (inputName == 'sets')
+                _setsError = '';
+              else if (inputName == 'resistance') _resistanceError = '';
+            }
+          }
+        }
+
         return AlertDialog(
           title: Text('Enter Repetitions and Sets'),
           content: Column(
@@ -80,27 +113,35 @@ class _ExerciseHandlerState extends State<ExerciseHandler> {
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   hintText: 'Repetitions',
+                  errorText:
+                      _repetitionsError.isNotEmpty ? _repetitionsError : null,
                 ),
                 onChanged: (value) {
-                  _repetitions = int.tryParse(value) ?? 0;
+                  validateInput(value, 'repetitions');
+                  _repetitions = int.tryParse(value);
                 },
               ),
               TextField(
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   hintText: 'Sets',
+                  errorText: _setsError.isNotEmpty ? _setsError : null,
                 ),
                 onChanged: (value) {
-                  _sets = int.tryParse(value) ?? 0;
+                  validateInput(value, 'sets');
+                  _sets = int.tryParse(value);
                 },
               ),
               TextField(
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   hintText: 'Resistance',
+                  errorText:
+                      _resistanceError.isNotEmpty ? _resistanceError : null,
                 ),
                 onChanged: (value) {
-                  _resistance = int.tryParse(value) ?? 0;
+                  validateInput(value, 'resistance');
+                  _resistance = int.tryParse(value);
                 },
               ),
             ],
@@ -114,41 +155,48 @@ class _ExerciseHandlerState extends State<ExerciseHandler> {
             ),
             TextButton(
               onPressed: () async {
-                Navigator.of(context).pop();
-                var workout_id = await widget.isar_service.getLastWorkout();
-                FinishedExercise finishedExercise = FinishedExercise(
+                if (_repetitions != null &&
+                    _sets != null &&
+                    _resistance != null) {
+                  Navigator.of(context).pop();
+                  var workout_id = await widget.isar_service.getLastWorkout();
+                  FinishedExercise finishedExercise = FinishedExercise(
                     exerciseId: widget._exerciseList[currentExerciseIndex].id,
-                    reps: _repetitions,
-                    sets: _sets,
-                    resistance: _resistance,
-                    workoutId: workout_id!.id);
-                widget.isar_service.addFinishedExercise(finishedExercise);
-                setState(() {
-                  if (currentExerciseIndex == widget._exerciseList.length - 1) {
-                    _stopWatchTimer.onExecute.add(StopWatchExecute.stop);
-                    widget.isar_service.updateLastWorkoutDuration(
-                        _stopWatchTimer.rawTime.value);
-                    showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                        title: Text("Congratulations"),
-                        content: Text("You have completed all exercises."),
-                        actions: [
-                          ElevatedButton(
-                            onPressed: () {
-                              //Stop timer
-                              Navigator.of(context)
-                                  .popUntil((route) => route.isFirst);
-                            },
-                            child: Text('OK'),
-                          ),
-                        ],
-                      ),
-                    );
-                  } else {
-                    currentExerciseIndex++;
-                  }
-                });
+                    reps: _repetitions!,
+                    sets: _sets!,
+                    resistance: _resistance!,
+                    workoutId: workout_id!.id,
+                  );
+                  widget.isar_service.addFinishedExercise(finishedExercise);
+                  setState(() {
+                    if (currentExerciseIndex ==
+                        widget._exerciseList.length - 1) {
+                      _stopWatchTimer.onExecute.add(StopWatchExecute.stop);
+                      widget.isar_service.updateLastWorkoutDuration(
+                        _stopWatchTimer.rawTime.value,
+                      );
+                      showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: Text("Congratulations"),
+                          content: Text("You have completed all exercises."),
+                          actions: [
+                            ElevatedButton(
+                              onPressed: () {
+                                // Stop timer
+                                Navigator.of(context)
+                                    .popUntil((route) => route.isFirst);
+                              },
+                              child: Text('OK'),
+                            ),
+                          ],
+                        ),
+                      );
+                    } else {
+                      currentExerciseIndex++;
+                    }
+                  });
+                }
               },
               child: Text('Next Exercise'),
             ),

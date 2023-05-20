@@ -6,15 +6,15 @@ import 'package:intl/intl.dart';
 import '../models/water_intake.dart';
 import 'components/quick_information_widget.dart';
 
-class MyStatsPage extends StatefulWidget {
-  const MyStatsPage({Key? key}) : super(key: key);
+class WaterStatsPage extends StatefulWidget {
+  const WaterStatsPage({Key? key}) : super(key: key);
 
   @override
   // ignore: library_private_types_in_public_api
-  _MyStatsPageState createState() => _MyStatsPageState();
+  _WaterStatsPageState createState() => _WaterStatsPageState();
 }
 
-class _MyStatsPageState extends State<MyStatsPage> {
+class _WaterStatsPageState extends State<WaterStatsPage> {
   final isarService = IsarService();
 
   List<DChartTimeData> _dataAllTimes = [];
@@ -365,8 +365,8 @@ class _MyStatsPageState extends State<MyStatsPage> {
         SizedBox(height: 45),
         today != null
             ? QuickInformation(
-                first: today?.waterIntake,
-                second: today?.maxWaterIntake,
+                first: today?.waterIntake.toString(),
+                second: today?.maxWaterIntake.toString(),
                 title: "Today",
                 firstIcon: Icons.water_drop,
                 secondIcon: Icons.track_changes_outlined,
@@ -376,8 +376,8 @@ class _MyStatsPageState extends State<MyStatsPage> {
         yesterday != null
             ? QuickInformation(
                 title: "Yesterday",
-                first: yesterday?.waterIntake,
-                second: yesterday?.maxWaterIntake,
+                first: yesterday?.waterIntake.toString(),
+                second: yesterday?.maxWaterIntake.toString(),
                 firstIcon: Icons.water_drop,
                 secondIcon: Icons.track_changes_outlined,
               )
@@ -386,8 +386,8 @@ class _MyStatsPageState extends State<MyStatsPage> {
         lastWeek != []
             ? QuickInformation(
                 title: "Last Week Average",
-                first: avgWaterIntake,
-                second: avgMaxWaterIntake,
+                first: avgWaterIntake.toString(),
+                second: avgMaxWaterIntake.toString(),
                 firstIcon: Icons.water_drop,
                 secondIcon: Icons.track_changes_outlined,
               )

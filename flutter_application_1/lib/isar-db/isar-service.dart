@@ -67,6 +67,8 @@ class IsarService {
       return Future.value(Isar.getInstance());
     }
 
+    await dropDB();
+
     await isar.writeTxn(() async {
       final pull = Group()..name = "Pull";
       final push = Group()..name = "Push";
@@ -131,8 +133,6 @@ class IsarService {
     });
   }
 
-  
-
   // Insert group (expected Group object)
   Future<void> addGroup(Group group) async {
     final isar = await _isar;
@@ -155,7 +155,7 @@ class IsarService {
   }
 
 // Get Exercise by ID
-    Future<Exercise?> getExerciseById(int eID) async {
+  Future<Exercise?> getExerciseById(int eID) async {
     final isar = await _isar;
 
     return isar.exercises.get(eID);
@@ -290,6 +290,18 @@ class IsarService {
     return isar.workouts.where().findAll();
   }
 
+  // Check if a workout with same date already exists - check only date not time
+  Future<bool> checkIfWorkoutExists(DateTime date) async {
+    final isar = await _isar;
+    final workout = await isar.workouts
+        .where()
+        .filter()
+        .dateEqualTo(DateTime(date.year, date.month, date.day, 0, 0, 0))
+        .findFirst();
+
+    return workout != null;
+  }
+
   // Insert FinishedExercise
   Future<void> addFinishedExercise(FinishedExercise finishedExercise) async {
     final isar = await _isar;
@@ -339,9 +351,8 @@ class IsarService {
   }
 
   // Get user by ID
-    Future<User?> getUserById(int id) async {
+  Future<User?> getUserById(int id) async {
     final isar = await _isar;
     return isar.users.get(id);
   }
-  
 }

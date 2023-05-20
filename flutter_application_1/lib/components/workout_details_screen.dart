@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/isar-db/isar-service.dart';
+import 'package:flutter_application_1/statistics/exercise_statistics.dart';
 import '../models/exercise.dart';
 import '../models/workout.dart';
 import '../models/finished_exercise.dart';
@@ -32,6 +33,8 @@ class _WorkoutDetailsScreenState extends State<WorkoutDetailsScreen> {
 
     // Fetch exercise names for each finished exercise
     for (var finishedExercise in _finishedExercises!) {
+      print("for finished exercise: ${finishedExercise.exerciseId}");
+
       Exercise? exercise =
           await _isar.getExerciseById(finishedExercise.exerciseId);
       if (exercise != null) {
@@ -162,10 +165,18 @@ class _WorkoutDetailsScreenState extends State<WorkoutDetailsScreen> {
                                     icon: Icon(
                                       Icons.bar_chart,
                                       color: Colors.purple,
-
                                     ),
                                     onPressed: () {
-                                      // Route to statistics page with >> ExerciseID <<
+                                      // Route to exercise_statistics.dart with exerciseId
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              ExerciseStatsPage(
+                                                  exerciseId:
+                                                      exercise.exerciseId),
+                                        ),
+                                      );
                                     },
                                   ),
                                 ],

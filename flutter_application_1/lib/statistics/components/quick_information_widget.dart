@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
 
 class QuickInformation extends StatelessWidget {
-  final double? first;
-  final double? second;
+  final String? first;
+  final String? second;
+  final String? third;
   final String title;
   final IconData firstIcon;
   final IconData secondIcon;
+  final IconData? thirdIcon;
 
   QuickInformation({
     required this.first,
     required this.second,
+    this.third,
     required this.title,
     required this.firstIcon,
     required this.secondIcon,
+    this.thirdIcon,
   });
 
   @override
@@ -62,6 +66,20 @@ class QuickInformation extends StatelessWidget {
                   SizedBox(width: 8),
                   Text(
                     '$second',
+                    style: TextStyle(fontSize: 17, color: Colors.white),
+                  ),
+                ],
+              ),
+              SizedBox(width: 16),
+              Row(
+                children: [
+                  Icon(
+                    thirdIcon,
+                    color: Colors.white,
+                  ),
+                  SizedBox(width: 8),
+                  Text(
+                    '$third',
                     style: TextStyle(fontSize: 17, color: Colors.white),
                   ),
                 ],

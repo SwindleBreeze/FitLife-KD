@@ -7,8 +7,8 @@
 
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/statistics/exercise_statistics.dart';
 import 'package:flutter_application_1/statistics/sleep_statistics.dart';
+import 'package:flutter_application_1/statistics/wasser_intake_statistics.dart';
 import 'package:provider/provider.dart';
 
 import 'add_water_page/add_water_page.dart';
@@ -79,7 +79,6 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   int workoutIdFormat(String strWorkoutID) {
-
     strWorkoutID = strWorkoutID.substring(1);
     strWorkoutID = strWorkoutID.substring(0, strWorkoutID.length - 1);
     int wID = int.parse(strWorkoutID);
@@ -159,8 +158,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       .substring(0, 10);
                   _selectedDate = date;
 
-                  if(_events.containsKey(day))
-                  {
+                  if (_events.containsKey(day)) {
                     int id = workoutIdFormat(_events[day].toString());
                     Navigator.push(
                       context,
@@ -181,7 +179,7 @@ class _MyHomePageState extends State<MyHomePage> {
               startingDayOfWeek: StartingDayOfWeek.monday,
               calendarStyle: CalendarStyle(
                 // slecetedDecoration & todayDecoration
-              selectedDecoration: BoxDecoration(
+                selectedDecoration: BoxDecoration(
                   gradient: RadialGradient(
                     radius: 0.9,
                     colors: [Colors.blue, Colors.purple],
@@ -244,7 +242,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     });
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => MyStatsPage()),
+                      MaterialPageRoute(builder: (context) => WaterStatsPage()),
                     );
                   },
                 ),

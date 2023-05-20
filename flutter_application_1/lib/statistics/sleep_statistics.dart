@@ -6,15 +6,15 @@ import 'package:intl/intl.dart';
 import '../models/sleep_cycle.dart';
 import 'components/quick_information_widget.dart';
 
-class MyStatsPage extends StatefulWidget {
-  const MyStatsPage({Key? key}) : super(key: key);
+class SleepStatsPage extends StatefulWidget {
+  const SleepStatsPage({Key? key}) : super(key: key);
 
   @override
   // ignore: library_private_types_in_public_api
-  _MyStatsPageState createState() => _MyStatsPageState();
+  _SleepStatsPageState createState() => _SleepStatsPageState();
 }
 
-class _MyStatsPageState extends State<MyStatsPage> {
+class _SleepStatsPageState extends State<SleepStatsPage> {
   final isarService = IsarService();
 
   List<DChartTimeData> _dataAllTimes = [];
@@ -364,8 +364,8 @@ class _MyStatsPageState extends State<MyStatsPage> {
         SizedBox(height: 45),
         today != null
             ? QuickInformation(
-                first: today?.sleepTime.toDouble(),
-                second: 8.0,
+                first: today?.sleepTime.toDouble().toString(),
+                second: 8.0.toString(),
                 title: "Today",
                 firstIcon: Icons.water_drop,
                 secondIcon: Icons.track_changes_outlined,
@@ -375,8 +375,8 @@ class _MyStatsPageState extends State<MyStatsPage> {
         yesterday != null
             ? QuickInformation(
                 title: "Yesterday",
-                first: yesterday?.sleepTime.toDouble(),
-                second: 8.0,
+                first: yesterday?.sleepTime.toDouble().toString(),
+                second: 8.0.toString(),
                 firstIcon: Icons.water_drop,
                 secondIcon: Icons.track_changes_outlined,
               )
@@ -385,8 +385,8 @@ class _MyStatsPageState extends State<MyStatsPage> {
         lastWeek != []
             ? QuickInformation(
                 title: "Last Week Average",
-                first: avgWaterIntake,
-                second: avgMaxWaterIntake,
+                first: avgWaterIntake.toString(),
+                second: avgMaxWaterIntake.toString(),
                 firstIcon: Icons.water_drop,
                 secondIcon: Icons.track_changes_outlined,
               )
@@ -395,4 +395,3 @@ class _MyStatsPageState extends State<MyStatsPage> {
     );
   }
 }
-

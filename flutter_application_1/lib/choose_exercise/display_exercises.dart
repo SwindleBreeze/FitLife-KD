@@ -159,7 +159,7 @@ class DisplayExerciseState extends State<DisplayExercise> {
                 );
               },
               icon: Icon(Icons.timer),
-              label: Text("Begin Exercise"),
+              label: Text("Begin Workout"),
             ),
           ],
         ),
