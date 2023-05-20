@@ -8,6 +8,7 @@
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/statistics/exercise_statistics.dart';
+import 'package:flutter_application_1/statistics/sleep_statistics.dart';
 import 'package:provider/provider.dart';
 
 import 'add_water_page/add_water_page.dart';
