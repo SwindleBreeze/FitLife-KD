@@ -30,7 +30,7 @@ Note: Make sure you have Flutter and Dart installed on your development machine.
 If you prefer to install the FitLife app on your Android device without building it from the source code, you can use the provided APK file. Here's how:
 
 1. Go to the [final-apk](/final-apk) folder in the repository.
-2. Download the latest release APK file (`fitlife-release.apk`).
+2. Download the latest release APK file (`app-release.apk`).
 3. Transfer the APK file to your Android device.
 4. On your Android device, navigate to the location where the APK file is stored.
 5. Tap on the APK file to start the installation process.
