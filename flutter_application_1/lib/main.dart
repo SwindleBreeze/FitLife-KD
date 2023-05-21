@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/statistics/sleep_statistics.dart';
 import 'package:flutter_application_1/statistics/wasser_intake_statistics.dart';
 import 'package:provider/provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import 'add_water_page/add_water_page.dart';
 import 'components/workout_details_screen.dart';
@@ -21,6 +22,7 @@ import 'isar-db/isar-service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   final isar = IsarService();
   await isar.insertIfEmpty();
 
@@ -43,7 +45,9 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         ),
-        home: MyHomePage(),
+        home: PermissionRequestWidget(
+          child: MyHomePage(),
+        ),
       ),
     );
   }
@@ -111,7 +115,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 185, 198, 221),
       appBar: AppBar(
@@ -382,4 +385,58 @@ class Event {
 
   @override
   String toString() => title;
+}
+
+class PermissionRequestWidget extends StatefulWidget {
+  final Widget child;
+
+  const PermissionRequestWidget({Key? key, required this.child})
+      : super(key: key);
+
+  @override
+  _PermissionRequestWidgetState createState() =>
+      _PermissionRequestWidgetState();
+}
+
+class _PermissionRequestWidgetState extends State<PermissionRequestWidget> {
+  bool permissionsGranted = false;
+
+  @override
+  void initState() {
+    super.initState();
+    checkPermissions();
+  }
+
+  Future<void> checkPermissions() async {
+    var storageStatus = await Permission.storage.status;
+    var locationStatus = await Permission.location.status;
+
+    if (!storageStatus.isGranted || !locationStatus.isGranted) {
+      // If the permissions are not granted, request them
+      await requestPermissions();
+    }
+
+    setState(() {
+      permissionsGranted = true;
+    });
+  }
+
+  Future<void> requestPermissions() async {
+    await Permission.storage.request();
+    await Permission.location.request();
+    // internet requests
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (!permissionsGranted) {
+      return Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
+    return widget.child;
+  }
 }
