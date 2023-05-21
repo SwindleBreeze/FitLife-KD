@@ -41,7 +41,17 @@ Note: Make sure to enable the "Unknown Sources" option in your device's settings
 
 ## Screenshots
 
-Include some visually appealing screenshots of your application to showcase its user interface and features. You can add them here.
+![Screenshot 1](screenshots/exercise-screen.jpg)
+*Exercise screen*
+
+![Screenshot 2](screenshots/sleep-stats.jpg)
+*Screen of sleep statistics*
+
+![Screenshot 3](screenshots/sleep-track.jpg)
+*Sleep Track page*
+
+![Screenshot 4](screenshots/water-intake.jpg)
+*Water Intake page*
 
 ## Contributing
 
@@ -53,12 +63,6 @@ Contributions to FitLife are welcome! If you encounter any issues or have sugges
 4. Push to the branch: `git push origin feature/your-feature`
 5. Submit a pull request.
 
-## License
-
-Specify the license under which your project is released. For example:
-
-FitLife is released under the [MIT License](https://opensource.org/licenses/MIT).
-
 ## Contact
 
 If you have any questions or inquiries, please feel free to contact us:
@@ -68,3 +72,6 @@ If you have any questions or inquiries, please feel free to contact us:
 
 We appreciate your interest in FitLife and your support in making it better!
 
+## Main Contributors
+Edin Ćehić, 63210054 - edinehi53@gmail.com , ec6746@student.uni-lj.si
+Amar Mehić, 63210209 - ammar.mehic@gmail.com , am5348@student.uni-lj.si
