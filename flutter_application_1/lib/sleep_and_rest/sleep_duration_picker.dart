@@ -38,17 +38,19 @@ class _SetAlarmState extends State<SetAlarm> {
         DateTime(currentDate.year, currentDate.month, currentDate.day);
 
     SleepCycle? sleepCycle = await isarService.getSleepCycleByDate(currentDate);
-    if (sleepCycle != null) {
-      setState(() {
-        String wakeUpTime1 =
-            DateFormat('hh:mm a').format(sleepCycle.wakeUpTime);
-        String bedTime1 = DateFormat('hh:mm a').format(sleepCycle.bedTime);
-        String dur = formatDuration(sleepCycle.sleepTime);
+    if (mounted) {
+      if (sleepCycle != null) {
+        setState(() {
+          String wakeUpTime1 =
+              DateFormat('hh:mm a').format(sleepCycle.wakeUpTime);
+          String bedTime1 = DateFormat('hh:mm a').format(sleepCycle.bedTime);
+          String dur = formatDuration(sleepCycle.sleepTime);
 
-        alarmTime = wakeUpTime1;
-        bedTime = bedTime1;
-        sleepDuration = dur;
-      });
+          alarmTime = wakeUpTime1;
+          bedTime = bedTime1;
+          sleepDuration = dur;
+        });
+      }
     }
   }
 
@@ -92,46 +94,32 @@ class _SetAlarmState extends State<SetAlarm> {
                   height: 30.0,
                   width: 100.0,
                   decoration: BoxDecoration(
-                    color: Colors.blueAccent,
-                    border: Border.all(
-                      color: Colors.black,
-                      width: 2.0,
-                    ),
-                    borderRadius: BorderRadius.circular(2.0),
-                    gradient: LinearGradient(
-                        colors: [Colors.indigo, Colors.blueAccent]),
-                    boxShadow: [
-                      BoxShadow(
-                          color: Colors.grey,
-                          blurRadius: 2.0,
-                          offset: Offset(2.0, 2.0)),
-                    ],
+                    border: Border.all(),
+                    color: Color.fromRGBO(167, 153, 240, 1),
+                    borderRadius: BorderRadius.circular(7),
+                    gradient: LinearGradient(colors: [
+                      Color.fromARGB(255, 112, 126, 203),
+                      Color.fromARGB(255, 174, 31, 235)
+                    ]),
                   ),
                   child: Text(
                     avgSleep,
                     style: TextStyle(color: Colors.white),
                   ),
                 ),
-                SizedBox(width: 100),  
+                SizedBox(width: 100),
                 Container(
                   alignment: Alignment.center,
                   height: 30.0,
                   width: 100.0,
                   decoration: BoxDecoration(
-                    color: Colors.blueAccent,
-                    border: Border.all(
-                      color: Colors.black,
-                      width: 2.0,
-                    ),
-                    borderRadius: BorderRadius.circular(2.0),
-                    gradient: LinearGradient(
-                        colors: [Colors.indigo, Colors.blueAccent]),
-                    boxShadow: [
-                      BoxShadow(
-                          color: Colors.grey,
-                          blurRadius: 2.0,
-                          offset: Offset(2.0, 2.0)),
-                    ],
+                    border: Border.all(),
+                    color: Color.fromRGBO(167, 153, 240, 1),
+                    borderRadius: BorderRadius.circular(7),
+                    gradient: LinearGradient(colors: [
+                      Color.fromARGB(255, 112, 126, 203),
+                      Color.fromARGB(255, 174, 31, 235)
+                    ]),
                   ),
                   child: Text(
                     yesterdaySleep,
@@ -144,7 +132,7 @@ class _SetAlarmState extends State<SetAlarm> {
             TimeDurationPicker(
               diameter: size.width * 0.75,
               icon1Data: Icons.bed,
-              icon2Data: Icons.notifications_none,
+              icon2Data: Icons.sunny,
               knobDecoration:
                   const BoxDecoration(color: Color.fromRGBO(167, 153, 240, 1)),
               clockDecoration: const BoxDecoration(
@@ -184,6 +172,17 @@ class _SetAlarmState extends State<SetAlarm> {
             SizedBox(height: size.height * 2 * smallerMarginRatio * 0.75),
             GestureDetector(
               child: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(),
+                  color: Color.fromRGBO(167, 153, 240, 1),
+                  borderRadius: BorderRadius.circular(9),
+                  boxShadow: [
+                    BoxShadow(
+                        color: Colors.grey,
+                        blurRadius: 2.0,
+                        offset: Offset(3.3, 3.3)),
+                  ],
+                ),
                 alignment: Alignment.center,
                 width: size.width * 0.5,
                 child: Text(
@@ -241,7 +240,7 @@ class _SetAlarmState extends State<SetAlarm> {
                     width: size.width * 0.4,
                     time: bedTime),
                 AlarmDescription(
-                    iconData: Icons.notifications_none,
+                    iconData: Icons.sunny,
                     title: "Wake Up",
                     width: size.width * 0.4,
                     time: alarmTime)
@@ -298,7 +297,7 @@ class _AlarmDescriptionState extends State<AlarmDescription> {
             horizontal: widget.width * horizontalPadding),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Icon(
               widget.iconData,
@@ -312,12 +311,7 @@ class _AlarmDescriptionState extends State<AlarmDescription> {
                 child: Text(
                   widget.title,
                   style: const TextStyle(
-                      color: Color.fromRGBO(
-                        54,
-                        61,
-                        86,
-                        1,
-                      ),
+                      color: Color.fromRGBO(54, 61, 86, 1),
                       fontWeight: FontWeight.bold),
                 ),
               ),

@@ -5,6 +5,8 @@ import 'package:flutter_application_1/models/exercise.dart';
 import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
 import 'package:isar/isar.dart';
 
+import '../components/subscription.dart';
+import '../models/user.dart';
 import 'begin_exercise_button.dart';
 import 'exercise_popup.dart';
 
@@ -21,12 +23,31 @@ class DisplayExercise extends StatefulWidget {
 class DisplayExerciseState extends State<DisplayExercise> {
   late List<Exercise> _exercises = [];
 
+  late bool premium = false;
   late Id groupid;
 
   @override
   void initState() {
     super.initState();
+    _checkPremiumAccess();
     _getExercises();
+  }
+
+  Future<void> _checkPremiumAccess() async {
+    bool isPremium = await _isUserPremium();
+
+    setState(() {
+      premium = isPremium;
+    });
+  }
+
+  Future<bool> _isUserPremium() async {
+    User? user = await widget.isar_service.getUserById(1);
+
+    if (user?.premium == false) {
+      return false;
+    }
+    return true;
   }
 
   Future<void> _getExercises() async {
@@ -80,70 +101,71 @@ class DisplayExerciseState extends State<DisplayExercise> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            ElevatedButton.icon(
-              onPressed: () {
-                // Show a dialog with a form for inserting exercise name and description
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    String exerciseName = '';
-                    String exerciseDescription = '';
-                    return AlertDialog(
-                      title: Text('Add Exercise'),
-                      content: SingleChildScrollView(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            TextField(
-                              decoration: InputDecoration(
-                                labelText: 'Exercise Name',
+            if (premium)
+              ElevatedButton.icon(
+                onPressed: () {
+                  // Show a dialog with a form for inserting exercise name and description
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      String exerciseName = '';
+                      String exerciseDescription = '';
+                      return AlertDialog(
+                        title: Text('Add Exercise'),
+                        content: SingleChildScrollView(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              TextField(
+                                decoration: InputDecoration(
+                                  labelText: 'Exercise Name',
+                                ),
+                                onChanged: (value) {
+                                  exerciseName = value;
+                                },
                               ),
-                              onChanged: (value) {
-                                exerciseName = value;
-                              },
-                            ),
-                            TextField(
-                              decoration: InputDecoration(
-                                labelText: 'Exercise Description',
+                              TextField(
+                                decoration: InputDecoration(
+                                  labelText: 'Exercise Description',
+                                ),
+                                onChanged: (value) {
+                                  exerciseDescription = value;
+                                },
                               ),
-                              onChanged: (value) {
-                                exerciseDescription = value;
-                              },
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                      actions: <Widget>[
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: Text('CANCEL'),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            // Add the exercise to the list
-                            Exercise newExercise = Exercise()
-                              ..name = exerciseName
-                              ..description = exerciseDescription;
-                            newExercise.groupid = groupid;
-                            widget.isar_service.addExercise(newExercise);
-                            setState(() {
-                              _exercises.add(newExercise);
-                            });
+                        actions: <Widget>[
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text('CANCEL'),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              // Add the exercise to the list
+                              Exercise newExercise = Exercise()
+                                ..name = exerciseName
+                                ..description = exerciseDescription;
+                              newExercise.groupid = groupid;
+                              widget.isar_service.addExercise(newExercise);
+                              setState(() {
+                                _exercises.add(newExercise);
+                              });
 
-                            Navigator.of(context).pop();
-                          },
-                          child: Text('ADD'),
-                        ),
-                      ],
-                    );
-                  },
-                );
-              },
-              icon: Icon(Icons.add),
-              label: Text("Add Exercise"),
-            ),
+                              Navigator.of(context).pop();
+                            },
+                            child: Text('ADD'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
+                icon: Icon(Icons.add),
+                label: Text("Add Exercise"),
+              ),
             ElevatedButton.icon(
               onPressed: () {
                 showDialog(
@@ -173,6 +195,7 @@ class ExerciseDetails extends StatefulWidget {
   ExerciseDetails({required this.exercise});
 
   @override
+  // ignore: library_private_types_in_public_api
   _ExerciseDetailsState createState() => _ExerciseDetailsState();
 }
 

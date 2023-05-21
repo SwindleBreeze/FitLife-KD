@@ -27,18 +27,13 @@ const SleepCycleSchema = CollectionSchema(
       name: r'date',
       type: IsarType.dateTime,
     ),
-    r'sleepCycleDate': PropertySchema(
-      id: 2,
-      name: r'sleepCycleDate',
-      type: IsarType.dateTime,
-    ),
     r'sleepTime': PropertySchema(
-      id: 3,
+      id: 2,
       name: r'sleepTime',
       type: IsarType.long,
     ),
     r'wakeUpTime': PropertySchema(
-      id: 4,
+      id: 3,
       name: r'wakeUpTime',
       type: IsarType.dateTime,
     )
@@ -74,9 +69,8 @@ void _sleepCycleSerialize(
 ) {
   writer.writeDateTime(offsets[0], object.bedTime);
   writer.writeDateTime(offsets[1], object.date);
-  writer.writeDateTime(offsets[2], object.sleepCycleDate);
-  writer.writeLong(offsets[3], object.sleepTime);
-  writer.writeDateTime(offsets[4], object.wakeUpTime);
+  writer.writeLong(offsets[2], object.sleepTime);
+  writer.writeDateTime(offsets[3], object.wakeUpTime);
 }
 
 SleepCycle _sleepCycleDeserialize(
@@ -88,8 +82,8 @@ SleepCycle _sleepCycleDeserialize(
   final object = SleepCycle(
     bedTime: reader.readDateTime(offsets[0]),
     date: reader.readDateTime(offsets[1]),
-    sleepTime: reader.readLong(offsets[3]),
-    wakeUpTime: reader.readDateTime(offsets[4]),
+    sleepTime: reader.readLong(offsets[2]),
+    wakeUpTime: reader.readDateTime(offsets[3]),
   );
   object.id = id;
   return object;
@@ -107,10 +101,8 @@ P _sleepCycleDeserializeProp<P>(
     case 1:
       return (reader.readDateTime(offset)) as P;
     case 2:
-      return (reader.readDateTime(offset)) as P;
-    case 3:
       return (reader.readLong(offset)) as P;
-    case 4:
+    case 3:
       return (reader.readDateTime(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -368,62 +360,6 @@ extension SleepCycleQueryFilter
     });
   }
 
-  QueryBuilder<SleepCycle, SleepCycle, QAfterFilterCondition>
-      sleepCycleDateEqualTo(DateTime value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'sleepCycleDate',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<SleepCycle, SleepCycle, QAfterFilterCondition>
-      sleepCycleDateGreaterThan(
-    DateTime value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'sleepCycleDate',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<SleepCycle, SleepCycle, QAfterFilterCondition>
-      sleepCycleDateLessThan(
-    DateTime value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'sleepCycleDate',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<SleepCycle, SleepCycle, QAfterFilterCondition>
-      sleepCycleDateBetween(
-    DateTime lower,
-    DateTime upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'sleepCycleDate',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-      ));
-    });
-  }
-
   QueryBuilder<SleepCycle, SleepCycle, QAfterFilterCondition> sleepTimeEqualTo(
       int value) {
     return QueryBuilder.apply(this, (query) {
@@ -566,19 +502,6 @@ extension SleepCycleQuerySortBy
     });
   }
 
-  QueryBuilder<SleepCycle, SleepCycle, QAfterSortBy> sortBySleepCycleDate() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'sleepCycleDate', Sort.asc);
-    });
-  }
-
-  QueryBuilder<SleepCycle, SleepCycle, QAfterSortBy>
-      sortBySleepCycleDateDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'sleepCycleDate', Sort.desc);
-    });
-  }
-
   QueryBuilder<SleepCycle, SleepCycle, QAfterSortBy> sortBySleepTime() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'sleepTime', Sort.asc);
@@ -642,19 +565,6 @@ extension SleepCycleQuerySortThenBy
     });
   }
 
-  QueryBuilder<SleepCycle, SleepCycle, QAfterSortBy> thenBySleepCycleDate() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'sleepCycleDate', Sort.asc);
-    });
-  }
-
-  QueryBuilder<SleepCycle, SleepCycle, QAfterSortBy>
-      thenBySleepCycleDateDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'sleepCycleDate', Sort.desc);
-    });
-  }
-
   QueryBuilder<SleepCycle, SleepCycle, QAfterSortBy> thenBySleepTime() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'sleepTime', Sort.asc);
@@ -694,12 +604,6 @@ extension SleepCycleQueryWhereDistinct
     });
   }
 
-  QueryBuilder<SleepCycle, SleepCycle, QDistinct> distinctBySleepCycleDate() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'sleepCycleDate');
-    });
-  }
-
   QueryBuilder<SleepCycle, SleepCycle, QDistinct> distinctBySleepTime() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'sleepTime');
@@ -730,13 +634,6 @@ extension SleepCycleQueryProperty
   QueryBuilder<SleepCycle, DateTime, QQueryOperations> dateProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'date');
-    });
-  }
-
-  QueryBuilder<SleepCycle, DateTime, QQueryOperations>
-      sleepCycleDateProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'sleepCycleDate');
     });
   }
 

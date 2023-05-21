@@ -8,16 +8,24 @@ class FinishedExercise {
   late int sets;
   late int reps;
   late int resistance;
-  late DateTime date;
+  late DateTime _date;
   late int exerciseId;
   late int workoutId;
   String exerciseName = "";
+  DateTime ?tmpDate;
 
   FinishedExercise(
       {required this.sets,
       required this.reps,
       required this.resistance,
       required this.exerciseId,
-      required this.workoutId})
-      : date = DateTime.now();
+      required this.workoutId, this.tmpDate})
+      : _date = DateTime.now();
+
+  DateTime get date => _date;
+
+  set date(DateTime newDate) {
+    // You can add any additional validation or logic here
+    _date = newDate;
+  }
 }

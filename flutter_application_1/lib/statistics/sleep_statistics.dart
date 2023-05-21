@@ -40,6 +40,19 @@ class _SleepStatsPageState extends State<SleepStatsPage> {
     super.initState();
   }
 
+  String formatDuration(int minutes) {
+    int hours = minutes ~/ 60;
+    int remainingMinutes = minutes % 60;
+
+    String formattedDuration = '';
+    if (hours > 0) {
+      formattedDuration += '$hours h ';
+    }
+    formattedDuration += '$remainingMinutes min';
+
+    return formattedDuration;
+  }
+
   bool isSameDate(DateTime date1, DateTime date2) {
     // Format the dates to compare only the date component
     DateFormat formatter = DateFormat('yyyy-MM-dd');
@@ -73,24 +86,23 @@ class _SleepStatsPageState extends State<SleepStatsPage> {
       // Check if it's last week intake
       if (intake.date.isAfter(now.subtract(Duration(days: 7)))) {
         lastWeek.add(intake);
-        print("Hurra");
       }
 
       // Check if it's last month intake
       if (intake.date.isAfter(oneMonthAgo)) {
         _dataLastMonth
-            .add(DChartTimeData(time: intake.date, value: intake.sleepTime));
+            .add(DChartTimeData(time: intake.date, value: intake.sleepTime/60));
       }
 
       // Check if it's last three months intake
       if (intake.date.isAfter(threeMonthsAgo)) {
         _data3Months
-            .add(DChartTimeData(time: intake.date, value: intake.sleepTime));
+            .add(DChartTimeData(time: intake.date, value: intake.sleepTime/60));
       }
 
       // Add to all data
       _dataAllTimes
-          .add(DChartTimeData(time: intake.date, value: intake.sleepTime));
+          .add(DChartTimeData(time: intake.date, value: intake.sleepTime/60));
     }
 
     for (SleepCycle intake in lastWeek) {
@@ -98,7 +110,7 @@ class _SleepStatsPageState extends State<SleepStatsPage> {
     }
 
     setState(() {
-      avgWaterIntake = avgWaterIntake;
+      avgWaterIntake = avgWaterIntake.truncateToDouble();
       avgMaxWaterIntake = avgMaxWaterIntake;
       visible1M = false;
       visible3M = false;
@@ -114,7 +126,7 @@ class _SleepStatsPageState extends State<SleepStatsPage> {
         centerTitle: true,
         backgroundColor: Colors.blue,
         title: Text(
-          'STATISTIKA',
+          'STATISTICS - SLEEP',
           style: TextStyle(
             color: Colors.white,
             letterSpacing: 4.0,
@@ -139,7 +151,7 @@ class _SleepStatsPageState extends State<SleepStatsPage> {
                       borderRadius: BorderRadius.all(Radius.circular(10))),
                   child: Center(
                     child: Text(
-                      'Water Intake Statistics - Last 3 Months',
+                      'Sleep Statistics - Last 3 Months',
                       style: TextStyle(
                         fontSize: 16,
                         color: Colors.white,
@@ -159,7 +171,7 @@ class _SleepStatsPageState extends State<SleepStatsPage> {
                       borderRadius: BorderRadius.all(Radius.circular(10))),
                   child: Center(
                     child: Text(
-                      'Water Intake Statistics - Last Month',
+                      'Sleep Statistics - Last Month',
                       style: TextStyle(
                         fontSize: 16,
                         color: Colors.white,
@@ -181,7 +193,7 @@ class _SleepStatsPageState extends State<SleepStatsPage> {
                     visible: visibleAll,
                     child: Center(
                       child: Text(
-                        'Water Intake Statistics - All Time',
+                        'Sleep Statistics - All Time',
                         style: TextStyle(
                           fontSize: 16,
                           color: Colors.white,
@@ -362,22 +374,20 @@ class _SleepStatsPageState extends State<SleepStatsPage> {
           ),
         ),
         SizedBox(height: 45),
-        today != null
-            ? QuickInformation(
-                first: today?.sleepTime.toDouble().toString(),
-                second: 8.0.toString(),
+        if (today != null) QuickInformation(
+                first: formatDuration(today!.sleepTime),
+                second: "8 h",
                 title: "Today",
-                firstIcon: Icons.water_drop,
+                firstIcon: Icons.bed,
                 secondIcon: Icons.track_changes_outlined,
-              )
-            : SizedBox(height: 0),
+              ) else SizedBox(height: 0),
         SizedBox(height: 35),
         yesterday != null
             ? QuickInformation(
                 title: "Yesterday",
-                first: yesterday?.sleepTime.toDouble().toString(),
-                second: 8.0.toString(),
-                firstIcon: Icons.water_drop,
+                first: formatDuration(yesterday!.sleepTime),
+                second:"8 h",
+                firstIcon: Icons.bed,
                 secondIcon: Icons.track_changes_outlined,
               )
             : SizedBox(height: 0),
@@ -385,9 +395,9 @@ class _SleepStatsPageState extends State<SleepStatsPage> {
         lastWeek != []
             ? QuickInformation(
                 title: "Last Week Average",
-                first: avgWaterIntake.toString(),
-                second: avgMaxWaterIntake.toString(),
-                firstIcon: Icons.water_drop,
+                first: formatDuration(avgWaterIntake.toInt()),
+                second: "8 h",
+                firstIcon: Icons.bed,
                 secondIcon: Icons.track_changes_outlined,
               )
             : SizedBox(height: 0),

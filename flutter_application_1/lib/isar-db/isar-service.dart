@@ -69,11 +69,214 @@ class IsarService {
 
     await dropDB();
 
+    List<Map<String, dynamic>> workoutData = [
+      {"date": 1684015200000000, "duration": 59477, "id": 1},
+      {"date": 1684274400000000, "duration": 19857, "id": 2},
+      {"date": 1684360800000000, "duration": 5000, "id": 43959747},
+      {"date": 1684447200000000, "duration": 32325, "id": 43959748},
+      {"date": 1684533600000000, "duration": 70404, "id": 43959749},
+      {"date": 1684620000000000, "duration": 58151, "id": 43959750}
+    ];
+
+    List<Workout> preparedWorkouts = workoutData.map((workout) {
+      int dateInMicroseconds =
+          workout['date']; // Convert milliseconds to microseconds
+      DateTime dateTime =
+          DateTime.fromMicrosecondsSinceEpoch(dateInMicroseconds);
+
+      Workout v = Workout(
+        duration: workout['duration'],
+      );
+
+      v.date = dateTime;
+
+      return v;
+    }).toList();
+
+    List<FinishedExercise> finishedExercises = [
+      FinishedExercise(
+        tmpDate: DateTime.fromMicrosecondsSinceEpoch(1684271137988356),
+        exerciseId: 41,
+        reps: 5,
+        resistance: 20,
+        sets: 8,
+        workoutId: 1,
+      ),
+      FinishedExercise(
+        tmpDate: DateTime.fromMicrosecondsSinceEpoch(1684271146531771),
+        exerciseId: 42,
+        reps: 1,
+        resistance: 1,
+        sets: 1,
+        workoutId: 1,
+      ),
+      FinishedExercise(
+        tmpDate: DateTime.fromMicrosecondsSinceEpoch(1684271155368883),
+        exerciseId: 43,
+        reps: 1,
+        resistance: 1,
+        sets: 1,
+        workoutId: 1,
+      ),
+      FinishedExercise(
+        tmpDate: DateTime.fromMicrosecondsSinceEpoch(1684271163660255),
+        exerciseId: 44,
+        reps: 10,
+        resistance: 10,
+        sets: 10,
+        workoutId: 1,
+      ),
+      FinishedExercise(
+        tmpDate: DateTime.fromMicrosecondsSinceEpoch(1684358165171668),
+        exerciseId: 21,
+        reps: 1,
+        resistance: 1,
+        sets: 1,
+        workoutId: 2,
+      ),
+      FinishedExercise(
+        tmpDate: DateTime.fromMicrosecondsSinceEpoch(1684511825012956),
+        exerciseId: 21,
+        reps: 1,
+        resistance: 1,
+        sets: 1,
+        workoutId: 3,
+      ),
+      FinishedExercise(
+        tmpDate: DateTime.fromMicrosecondsSinceEpoch(1684511837329252),
+        exerciseId: 22,
+        reps: 5,
+        resistance: 20,
+        sets: 4,
+        workoutId: 3,
+      ),
+      FinishedExercise(
+        tmpDate: DateTime.fromMicrosecondsSinceEpoch(1684598932705061),
+        exerciseId: 11,
+        reps: 0,
+        resistance: 0,
+        sets: 0,
+        workoutId: 4,
+      ),
+      FinishedExercise(
+        tmpDate: DateTime.fromMicrosecondsSinceEpoch(1684660738679296),
+        exerciseId: 1,
+        reps: 1,
+        resistance: 3,
+        sets: 2,
+        workoutId: 5,
+      ),
+      FinishedExercise(
+        tmpDate: DateTime.fromMicrosecondsSinceEpoch(1684660751786216),
+        exerciseId: 2,
+        reps: 4,
+        resistance: 60,
+        sets: 8,
+        workoutId: 5,
+      ),
+      FinishedExercise(
+        tmpDate: DateTime.fromMicrosecondsSinceEpoch(1684660761671068),
+        exerciseId: 3,
+        reps: 3,
+        resistance: 100,
+        sets: 3,
+        workoutId: 5,
+      ),
+    ];
+
+    for (FinishedExercise finished in finishedExercises) {
+      finished.date = finished.tmpDate!;
+    }
+
+    List<WaterIntake> waterIntakes = [
+      WaterIntake(
+        date: DateTime.fromMicrosecondsSinceEpoch(1684015200000000),
+        maxWaterIntake: 3.8,
+        waterIntake: 3.9000000000000004,
+      ),
+      WaterIntake(
+        date: DateTime.fromMicrosecondsSinceEpoch(1684101600000000),
+        maxWaterIntake: 4.6,
+        waterIntake: 3.5,
+      ),
+      WaterIntake(
+        date: DateTime.fromMicrosecondsSinceEpoch(1684188000000000),
+        maxWaterIntake: 3,
+        waterIntake: 3.8500000000000005,
+      ),
+      WaterIntake(
+        date: DateTime.fromMicrosecondsSinceEpoch(1684447200000000),
+        maxWaterIntake: 3,
+        waterIntake: 2.25,
+      ),
+      WaterIntake(
+        date: DateTime.fromMicrosecondsSinceEpoch(1684533600000000),
+        maxWaterIntake: 4.3,
+        waterIntake: 4,
+      ),
+      WaterIntake(
+        date: DateTime.fromMicrosecondsSinceEpoch(1684620000000000),
+        maxWaterIntake: 3,
+        waterIntake: 2.5,
+      ),
+    ];
+
+    List<SleepCycle> sleepCycles = [
+      SleepCycle(
+        bedTime: DateTime.fromMicrosecondsSinceEpoch(1980000000),
+        date: DateTime.fromMicrosecondsSinceEpoch(1683928800000000),
+        sleepTime: 490,
+        wakeUpTime: DateTime.fromMicrosecondsSinceEpoch(31380000000),
+      ),
+      SleepCycle(
+        bedTime: DateTime.fromMicrosecondsSinceEpoch(3360000000),
+        date: DateTime.fromMicrosecondsSinceEpoch(1684015200000000),
+        sleepTime: 605,
+        wakeUpTime: DateTime.fromMicrosecondsSinceEpoch(2760000000),
+      ),
+      SleepCycle(
+        bedTime: DateTime.fromMicrosecondsSinceEpoch(14520000000),
+        date: DateTime.fromMicrosecondsSinceEpoch(1684101600000000),
+        sleepTime: 539,
+        wakeUpTime: DateTime.fromMicrosecondsSinceEpoch(1684533600000000),
+      ),
+      SleepCycle(
+        bedTime: DateTime.fromMicrosecondsSinceEpoch(4680000000),
+        date: DateTime.fromMicrosecondsSinceEpoch(1684188000000000),
+        sleepTime: 414,
+        wakeUpTime: DateTime.fromMicrosecondsSinceEpoch(29520000000),
+      ),
+      SleepCycle(
+        bedTime: DateTime.fromMicrosecondsSinceEpoch(11700000000),
+        date: DateTime.fromMicrosecondsSinceEpoch(1684447200000000),
+        sleepTime: 614,
+        wakeUpTime: DateTime.fromMicrosecondsSinceEpoch(48480000000),
+      ),
+      SleepCycle(
+        bedTime: DateTime.fromMicrosecondsSinceEpoch(-3600000000),
+        date: DateTime.fromMicrosecondsSinceEpoch(1684533600000000),
+        sleepTime: 489,
+        wakeUpTime: DateTime.fromMicrosecondsSinceEpoch(25740000000),
+      ),
+      SleepCycle(
+        bedTime: DateTime.fromMicrosecondsSinceEpoch(7140000000),
+        date: DateTime.fromMicrosecondsSinceEpoch(1684620000000000),
+        sleepTime: 538,
+        wakeUpTime: DateTime.fromMicrosecondsSinceEpoch(39360000000),
+      ),
+    ];
+
     await isar.writeTxn(() async {
       final pull = Group()..name = "Pull";
       final push = Group()..name = "Push";
       final legs = Group()..name = "Legs";
       final user = User();
+
+      // Insert prepared data
+      await isar.workouts.putAll(preparedWorkouts);
+      await isar.finishedExercises.putAll(finishedExercises);
+      await isar.waterIntakes.putAll(waterIntakes);
+      await isar.sleepCycles.putAll(sleepCycles);
 
       // Add groups to the database
       await isar.groups.putAll([pull, push, legs]);
@@ -354,5 +557,18 @@ class IsarService {
   Future<User?> getUserById(int id) async {
     final isar = await _isar;
     return isar.users.get(id);
+  }
+
+  // Update user's premium attribute
+  Future<void> updateUserPremium(int id, bool isPremium) async {
+    final isar = await _isar;
+    User? user = await getUserById(id);
+
+    if (user != null) {
+      user.premium = isPremium;
+      await isar.writeTxn(() {
+        return isar.users.put(user);
+      });
+    }
   }
 }

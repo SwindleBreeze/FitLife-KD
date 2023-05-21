@@ -41,8 +41,12 @@ class ExerciseModal extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    DateTime currentDate = DateTime.now();
+    currentDate =
+        DateTime(currentDate.year, currentDate.month, currentDate.day);
     return FutureBuilder<bool>(
-      future: isarService.checkIfWorkoutExists(DateTime.now()),
+      future: isarService.checkIfWorkoutExists(currentDate),
       builder: (context, snapshot) {
         print(snapshot.data);
         if (snapshot.connectionState == ConnectionState.waiting) {

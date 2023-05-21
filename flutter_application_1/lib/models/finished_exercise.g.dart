@@ -47,8 +47,13 @@ const FinishedExerciseSchema = CollectionSchema(
       name: r'sets',
       type: IsarType.long,
     ),
-    r'workoutId': PropertySchema(
+    r'tmpDate': PropertySchema(
       id: 6,
+      name: r'tmpDate',
+      type: IsarType.dateTime,
+    ),
+    r'workoutId': PropertySchema(
+      id: 7,
       name: r'workoutId',
       type: IsarType.long,
     )
@@ -89,7 +94,8 @@ void _finishedExerciseSerialize(
   writer.writeLong(offsets[3], object.reps);
   writer.writeLong(offsets[4], object.resistance);
   writer.writeLong(offsets[5], object.sets);
-  writer.writeLong(offsets[6], object.workoutId);
+  writer.writeDateTime(offsets[6], object.tmpDate);
+  writer.writeLong(offsets[7], object.workoutId);
 }
 
 FinishedExercise _finishedExerciseDeserialize(
@@ -103,7 +109,8 @@ FinishedExercise _finishedExerciseDeserialize(
     reps: reader.readLong(offsets[3]),
     resistance: reader.readLong(offsets[4]),
     sets: reader.readLong(offsets[5]),
-    workoutId: reader.readLong(offsets[6]),
+    tmpDate: reader.readDateTimeOrNull(offsets[6]),
+    workoutId: reader.readLong(offsets[7]),
   );
   object.date = reader.readDateTime(offsets[0]);
   object.exerciseName = reader.readString(offsets[2]);
@@ -131,6 +138,8 @@ P _finishedExerciseDeserializeProp<P>(
     case 5:
       return (reader.readLong(offset)) as P;
     case 6:
+      return (reader.readDateTimeOrNull(offset)) as P;
+    case 7:
       return (reader.readLong(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -704,6 +713,80 @@ extension FinishedExerciseQueryFilter
   }
 
   QueryBuilder<FinishedExercise, FinishedExercise, QAfterFilterCondition>
+      tmpDateIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'tmpDate',
+      ));
+    });
+  }
+
+  QueryBuilder<FinishedExercise, FinishedExercise, QAfterFilterCondition>
+      tmpDateIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'tmpDate',
+      ));
+    });
+  }
+
+  QueryBuilder<FinishedExercise, FinishedExercise, QAfterFilterCondition>
+      tmpDateEqualTo(DateTime? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'tmpDate',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<FinishedExercise, FinishedExercise, QAfterFilterCondition>
+      tmpDateGreaterThan(
+    DateTime? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'tmpDate',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<FinishedExercise, FinishedExercise, QAfterFilterCondition>
+      tmpDateLessThan(
+    DateTime? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'tmpDate',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<FinishedExercise, FinishedExercise, QAfterFilterCondition>
+      tmpDateBetween(
+    DateTime? lower,
+    DateTime? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'tmpDate',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<FinishedExercise, FinishedExercise, QAfterFilterCondition>
       workoutIdEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -850,6 +933,20 @@ extension FinishedExerciseQuerySortBy
   }
 
   QueryBuilder<FinishedExercise, FinishedExercise, QAfterSortBy>
+      sortByTmpDate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'tmpDate', Sort.asc);
+    });
+  }
+
+  QueryBuilder<FinishedExercise, FinishedExercise, QAfterSortBy>
+      sortByTmpDateDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'tmpDate', Sort.desc);
+    });
+  }
+
+  QueryBuilder<FinishedExercise, FinishedExercise, QAfterSortBy>
       sortByWorkoutId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'workoutId', Sort.asc);
@@ -961,6 +1058,20 @@ extension FinishedExerciseQuerySortThenBy
   }
 
   QueryBuilder<FinishedExercise, FinishedExercise, QAfterSortBy>
+      thenByTmpDate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'tmpDate', Sort.asc);
+    });
+  }
+
+  QueryBuilder<FinishedExercise, FinishedExercise, QAfterSortBy>
+      thenByTmpDateDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'tmpDate', Sort.desc);
+    });
+  }
+
+  QueryBuilder<FinishedExercise, FinishedExercise, QAfterSortBy>
       thenByWorkoutId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'workoutId', Sort.asc);
@@ -1017,6 +1128,13 @@ extension FinishedExerciseQueryWhereDistinct
   }
 
   QueryBuilder<FinishedExercise, FinishedExercise, QDistinct>
+      distinctByTmpDate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'tmpDate');
+    });
+  }
+
+  QueryBuilder<FinishedExercise, FinishedExercise, QDistinct>
       distinctByWorkoutId() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'workoutId');
@@ -1066,6 +1184,13 @@ extension FinishedExerciseQueryProperty
   QueryBuilder<FinishedExercise, int, QQueryOperations> setsProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'sets');
+    });
+  }
+
+  QueryBuilder<FinishedExercise, DateTime?, QQueryOperations>
+      tmpDateProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'tmpDate');
     });
   }
 

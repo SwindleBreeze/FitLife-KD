@@ -2,7 +2,6 @@
   To do:
   * make sure that whenever the new Workout is added to DB (workout is finished),
     that you update the event lists (call _updateEventsFromDB)
-    
 */
 
 import 'package:english_words/english_words.dart';
@@ -112,9 +111,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 229, 233, 241),
+      backgroundColor: Color.fromARGB(255, 185, 198, 221),
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Text(
           "FITLIFE",
           style: TextStyle(
@@ -172,20 +173,15 @@ class _MyHomePageState extends State<MyHomePage> {
               },
               pageAnimationEnabled: true,
               pageJumpingEnabled: true,
-              onCalendarCreated: (pageController) {
-                _updateEventsFromDB(_isar);
-              },
               calendarFormat: CalendarFormat.week,
               startingDayOfWeek: StartingDayOfWeek.monday,
               calendarStyle: CalendarStyle(
-                // slecetedDecoration & todayDecoration
                 selectedDecoration: BoxDecoration(
                   gradient: RadialGradient(
                     radius: 0.9,
                     colors: [Colors.blue, Colors.purple],
                   ),
                 ),
-
                 isTodayHighlighted: false,
                 weekendDecoration: BoxDecoration(
                   gradient: RadialGradient(
@@ -242,7 +238,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     });
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => WaterStatsPage()),
+                      MaterialPageRoute(builder: (context) => AddWaterPage()),
                     );
                   },
                 ),
@@ -306,7 +302,9 @@ class _MyHomePageState extends State<MyHomePage> {
                           groupName: 'Legs',
                         ),
                       ),
-                    );
+                    ).then((result) {
+                      _updateEventsFromDB(_isar);
+                    });
                   });
                 },
               ),
@@ -329,7 +327,9 @@ class _MyHomePageState extends State<MyHomePage> {
                           groupName: 'Push',
                         ),
                       ),
-                    );
+                    ).then((result) {
+                      _updateEventsFromDB(_isar);
+                    });
                   });
                 },
               ),
@@ -352,7 +352,9 @@ class _MyHomePageState extends State<MyHomePage> {
                           groupName: 'Pull',
                         ),
                       ),
-                    );
+                    ).then((result) {
+                      _updateEventsFromDB(_isar);
+                    });
                   });
                 },
               ),

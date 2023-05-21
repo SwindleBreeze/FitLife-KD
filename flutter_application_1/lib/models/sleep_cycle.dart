@@ -10,6 +10,7 @@ class SleepCycle {
   DateTime bedTime;
   DateTime wakeUpTime;
   int sleepTime;
+  
 
   SleepCycle({
     required DateTime date,
@@ -21,6 +22,4 @@ class SleepCycle {
 
   // Getter for formatted date (without time)
   DateTime get date => DateTime(_date.year, _date.month, _date.day);
-
-  DateTime get sleepCycleDate => date;
 }

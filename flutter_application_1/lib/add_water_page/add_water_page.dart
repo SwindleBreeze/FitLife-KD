@@ -1,8 +1,10 @@
 // Libraries and packages
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_application_1/statistics/wasser_intake_statistics.dart';
 
 // My widgets
+import '../components/subscription.dart';
 import '../models/user.dart';
 import 'progress_indicator.dart';
 import 'water_intake_button.dart';
@@ -29,19 +31,35 @@ class _AddWaterPageState extends State<AddWaterPage> {
   double maxWaterIntake = 3; // The maximum amount of water intake in liters
   bool _sliderNeeded = false;
   Color _color = Colors.purple;
-  @override
-  void initState() async {
 
-    // check if user has access (premium)
+@override
+  void initState() {
+    _checkPremiumAccess();
+    _loadWaterIntake();
+    super.initState();
+  }
+
+  Future<void> _checkPremiumAccess() async {
+    bool isPremium = await _isUserPremium();
+    if (!isPremium) {
+      // ignore: use_build_context_synchronously
+      Navigator.pop(context); // Pop the current page
+      // ignore: use_build_context_synchronously
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => PremiumPage()),
+      );
+    }
+  }
+
+  Future<bool> _isUserPremium() async {
     User? user = await isarService.getUserById(1);
 
-    if(user?.premium == false)
-    {
-      // Route to get premium page
+    if (user?.premium == false) {
+      return false;
     }
 
-    super.initState();
-    _loadWaterIntake();
+    return true;
   }
 
   Future<void> _loadWaterIntake() async {
@@ -53,12 +71,17 @@ class _AddWaterPageState extends State<AddWaterPage> {
     WaterIntake? waterIntakeEntry =
         await isarService.getWaterIntakeByDate(dateOnly);
 
+    print(dateOnly);
+
     if (waterIntakeEntry != null) {
       // Water intake entry found, update the waterIntake value
-      setState(() {
-        waterIntake = waterIntakeEntry.waterIntake;
-        maxWaterIntake = waterIntakeEntry.maxWaterIntake;
-      });
+      if(mounted)
+      {
+        setState(() {
+          waterIntake = waterIntakeEntry.waterIntake;
+          maxWaterIntake = waterIntakeEntry.maxWaterIntake;
+        });
+      }
     }
   }
 
@@ -254,6 +277,8 @@ class _AddWaterPageState extends State<AddWaterPage> {
                       maxWaterIntake: maxWaterIntake,
                     );
 
+                    print(newWaterIntake.date);
+
                     // Check if water intake entry already exists for the current date
                     WaterIntake? existingIntake =
                         await isarService.getWaterIntakeByDate(currentDate);
@@ -337,7 +362,10 @@ class _AddWaterPageState extends State<AddWaterPage> {
         backgroundColor: Colors.blue,
         child: Icon(Icons.analytics_outlined),
         onPressed: () {
-          // Go to Water Intake Statistics and Trends
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => WaterStatsPage()),
+          );
         },
       ),
     );

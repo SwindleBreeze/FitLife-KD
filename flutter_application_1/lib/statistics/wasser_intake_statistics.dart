@@ -115,7 +115,7 @@ class _WaterStatsPageState extends State<WaterStatsPage> {
         centerTitle: true,
         backgroundColor: Colors.blue,
         title: Text(
-          'STATISTIKA',
+          'STATISTICS - WATER',
           style: TextStyle(
             color: Colors.white,
             letterSpacing: 4.0,
@@ -386,8 +386,8 @@ class _WaterStatsPageState extends State<WaterStatsPage> {
         lastWeek != []
             ? QuickInformation(
                 title: "Last Week Average",
-                first: avgWaterIntake.toString(),
-                second: avgMaxWaterIntake.toString(),
+                first: avgWaterIntake.toStringAsFixed(2),
+                second: avgMaxWaterIntake.toStringAsFixed(2),
                 firstIcon: Icons.water_drop,
                 secondIcon: Icons.track_changes_outlined,
               )

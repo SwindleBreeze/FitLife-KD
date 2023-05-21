@@ -32,6 +32,7 @@ dependencies:
   d_chart: ^2.2.11
   flutter_vector_icons: ^2.0.0
   google_fonts: ^4.0.4
+  confetti: ^0.7.0
   # flutter_widget_from_html: ^0.10.0
   # flutter_html: ^2.1.2
 

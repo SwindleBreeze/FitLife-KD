@@ -160,7 +160,7 @@ class _ExerciseStatsPageState extends State<ExerciseStatsPage> {
         centerTitle: true,
         backgroundColor: Colors.blue,
         title: Text(
-          'STATISTIKA',
+          'STATISTICS',
           style: TextStyle(
             color: Colors.white,
             letterSpacing: 4.0,
@@ -481,9 +481,9 @@ class _ExerciseStatsPageState extends State<ExerciseStatsPage> {
         SizedBox(height: 15),
         today != null
             ? QuickInformation(
-                first: today?.sets.toString(),
-                second: today?.reps.toString(),
-                third: today?.resistance.toString(),
+                first: today?.sets.toStringAsFixed(2),
+                second: today?.reps.toStringAsFixed(2),
+                third: today?.resistance.toStringAsFixed(2),
                 title: "Today",
                 firstIcon: Icons.bar_chart,
                 secondIcon: Icons.replay,
@@ -494,9 +494,9 @@ class _ExerciseStatsPageState extends State<ExerciseStatsPage> {
         yesterday != null
             ? QuickInformation(
                 title: "Yesterday",
-                first: yesterday?.sets.toString(),
-                second: yesterday?.reps.toString(),
-                third: yesterday?.resistance.toString(),
+                first: yesterday?.sets.toStringAsFixed(2),
+                second: yesterday?.reps.toStringAsFixed(2),
+                third: yesterday?.resistance.toStringAsFixed(2),
                 firstIcon: Icons.bar_chart,
                 secondIcon: Icons.replay,
                 thirdIcon: Icons.expand,
@@ -506,9 +506,9 @@ class _ExerciseStatsPageState extends State<ExerciseStatsPage> {
         lastWeek.isNotEmpty
             ? QuickInformation(
                 title: "Last Week Average",
-                first: avgSets.toString(),
-                second: avgReps.toString(),
-                third: avgResistance.toString(),
+                first: avgSets.toStringAsFixed(2),
+                second: avgReps.toStringAsFixed(2),
+                third: avgResistance.toStringAsFixed(2),
                 firstIcon: Icons.bar_chart,
                 secondIcon: Icons.replay,
                 thirdIcon: Icons.expand,

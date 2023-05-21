@@ -70,7 +70,9 @@ class QuickInformation extends StatelessWidget {
                   ),
                 ],
               ),
+              if (third != null)
               SizedBox(width: 16),
+              if (third != null)
               Row(
                 children: [
                   Icon(
