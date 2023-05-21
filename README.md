@@ -67,11 +67,13 @@ Contributions to FitLife are welcome! If you encounter any issues or have sugges
 
 If you have any questions or inquiries, please feel free to contact us:
 
-- Email: fitlife@example.com
+- Email: fitlife@gmail.com
 - Website: www.fitlifeapp.com
 
 We appreciate your interest in FitLife and your support in making it better!
 
 ## Main Contributors
-Edin Ćehić, 63210054 - edinehi53@gmail.com , ec6746@student.uni-lj.si
-Amar Mehić, 63210209 - ammar.mehic@gmail.com , am5348@student.uni-lj.si
+
+- Edin Ćehić, 63210054 - edinehi53@gmail.com , ec6746@student.uni-lj.si
+
+- Amar Mehić, 63210209 - ammar.mehic@gmail.com , am5348@student.uni-lj.si
