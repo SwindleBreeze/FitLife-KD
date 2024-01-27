@@ -76,8 +76,8 @@ class _WorkoutDetailsScreenState extends State<WorkoutDetailsScreen> {
           ),
         ),
         centerTitle: true,
-        shadowColor: Colors.blue,
-        backgroundColor: Colors.blue,
+        shadowColor: Colors.deepPurple,
+        backgroundColor: Colors.deepPurple,
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

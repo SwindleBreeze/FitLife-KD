@@ -142,10 +142,9 @@ class _MyHomePageState extends State<MyHomePage> {
                       width: 45,
                       height: 45,
                       decoration: BoxDecoration(
-                        border: Border.all(
-                            color: Color.fromARGB(255, 0, 34, 79), width: 5),
-                        shape: BoxShape.rectangle,
-                      ),
+                          border: Border.all(
+                              color: Color.fromARGB(255, 0, 34, 79), width: 5),
+                          shape: BoxShape.rectangle),
                     );
                   }
                   return null;
@@ -176,7 +175,7 @@ class _MyHomePageState extends State<MyHomePage> {
               },
               pageAnimationEnabled: true,
               pageJumpingEnabled: true,
-              calendarFormat: CalendarFormat.week,
+              calendarFormat: CalendarFormat.month,
               startingDayOfWeek: StartingDayOfWeek.monday,
               calendarStyle: CalendarStyle(
                 selectedDecoration: BoxDecoration(
@@ -211,7 +210,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 return _getEventsForDay(day);
               },
             ),
-            SizedBox(height: 20),
+            SizedBox(height: MediaQuery.of(context).size.height * 0.25),
 
             // Other UI components
             Row(
@@ -221,8 +220,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 GestureDetector(
                   child: AnimatedContainer(
                     duration: Duration(milliseconds: 700),
-                    height: 45,
-                    width: 45,
+                    height: 60,
+                    width: 60,
                     margin:
                         EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
                     decoration: BoxDecoration(
@@ -233,12 +232,10 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: Icon(
                       Icons.water_drop,
                       color: Colors.deepPurple,
+                      size: 30,
                     ),
                   ),
                   onTap: () {
-                    setState(() {
-                      tmpColor = Color.fromARGB(255, 2, 33, 58);
-                    });
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => AddWaterPage()),
@@ -249,8 +246,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 GestureDetector(
                   child: AnimatedContainer(
                     duration: Duration(milliseconds: 700),
-                    height: 45,
-                    width: 45,
+                    height: 60,
+                    width: 60,
                     margin:
                         EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
                     decoration: BoxDecoration(
@@ -261,12 +258,10 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: Icon(
                       Icons.self_improvement_sharp,
                       color: Colors.deepPurple,
+                      size: 40,
                     ),
                   ),
                   onTap: () {
-                    setState(() {
-                      tmpColor = Color.fromARGB(255, 2, 33, 58);
-                    });
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => MySleepPage()),
@@ -278,12 +273,12 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           showMenu<String>(
             context: context,
             position: RelativeRect.fromLTRB(
-              MediaQuery.of(context).size.width - 130,
+              MediaQuery.of(context).size.width - 235,
               MediaQuery.of(context).size.height - 260,
               MediaQuery.of(context).size.width,
               MediaQuery.of(context).size.height,
@@ -364,8 +359,10 @@ class _MyHomePageState extends State<MyHomePage> {
             ],
           );
         },
-        child: Icon(Icons.add),
+        label: Text("Begin Workout"),
+        backgroundColor: Colors.deepPurple[300],
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 

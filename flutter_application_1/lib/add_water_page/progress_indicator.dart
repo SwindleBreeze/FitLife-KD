@@ -56,9 +56,10 @@ class _MyProgressIndicatorState extends State<MyProgressIndicator>
   @override
   Widget build(BuildContext context) {
     return CircularProgressIndicator(
-      color: _animation.value < 1 ? Colors.blue : Colors.indigo[600],
+      color: _animation.value < 1 ? Colors.indigo[400] : Colors.indigo[700],
       value: _animation.value,
       backgroundColor: Color.fromARGB(255, 222, 220, 220),
+      strokeWidth: 7,
     );
   }
 }

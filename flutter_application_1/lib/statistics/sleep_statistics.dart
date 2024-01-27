@@ -90,19 +90,19 @@ class _SleepStatsPageState extends State<SleepStatsPage> {
 
       // Check if it's last month intake
       if (intake.date.isAfter(oneMonthAgo)) {
-        _dataLastMonth
-            .add(DChartTimeData(time: intake.date, value: intake.sleepTime/60));
+        _dataLastMonth.add(
+            DChartTimeData(time: intake.date, value: intake.sleepTime / 60));
       }
 
       // Check if it's last three months intake
       if (intake.date.isAfter(threeMonthsAgo)) {
-        _data3Months
-            .add(DChartTimeData(time: intake.date, value: intake.sleepTime/60));
+        _data3Months.add(
+            DChartTimeData(time: intake.date, value: intake.sleepTime / 60));
       }
 
       // Add to all data
       _dataAllTimes
-          .add(DChartTimeData(time: intake.date, value: intake.sleepTime/60));
+          .add(DChartTimeData(time: intake.date, value: intake.sleepTime / 60));
     }
 
     for (SleepCycle intake in lastWeek) {
@@ -121,10 +121,10 @@ class _SleepStatsPageState extends State<SleepStatsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blue[100],
+      backgroundColor: Colors.deepPurple[100],
       appBar: AppBar(
         centerTitle: true,
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.deepPurple,
         title: Text(
           'STATISTICS - SLEEP',
           style: TextStyle(
@@ -374,19 +374,22 @@ class _SleepStatsPageState extends State<SleepStatsPage> {
           ),
         ),
         SizedBox(height: 45),
-        if (today != null) QuickInformation(
-                first: formatDuration(today!.sleepTime),
-                second: "8 h",
-                title: "Today",
-                firstIcon: Icons.bed,
-                secondIcon: Icons.track_changes_outlined,
-              ) else SizedBox(height: 0),
+        if (today != null)
+          QuickInformation(
+            first: formatDuration(today!.sleepTime),
+            second: "8 h",
+            title: "Today",
+            firstIcon: Icons.bed,
+            secondIcon: Icons.track_changes_outlined,
+          )
+        else
+          SizedBox(height: 0),
         SizedBox(height: 35),
         yesterday != null
             ? QuickInformation(
                 title: "Yesterday",
                 first: formatDuration(yesterday!.sleepTime),
-                second:"8 h",
+                second: "8 h",
                 firstIcon: Icons.bed,
                 secondIcon: Icons.track_changes_outlined,
               )

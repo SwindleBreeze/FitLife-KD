@@ -155,10 +155,10 @@ class _ExerciseStatsPageState extends State<ExerciseStatsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blue[100],
+      backgroundColor: Colors.deepPurple[100],
       appBar: AppBar(
         centerTitle: true,
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.deepPurple,
         title: Text(
           'STATISTICS',
           style: TextStyle(
