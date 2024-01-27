@@ -127,8 +127,8 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
         centerTitle: true,
-        shadowColor: Colors.blue,
-        backgroundColor: Colors.blue,
+        shadowColor: Colors.deepPurple,
+        backgroundColor: Colors.deepPurpleAccent,
       ),
       body: SafeArea(
         child: Column(
@@ -182,20 +182,20 @@ class _MyHomePageState extends State<MyHomePage> {
                 selectedDecoration: BoxDecoration(
                   gradient: RadialGradient(
                     radius: 0.9,
-                    colors: [Colors.blue, Colors.purple],
+                    colors: [Colors.deepPurple, Colors.deepPurpleAccent],
                   ),
                 ),
                 isTodayHighlighted: false,
                 weekendDecoration: BoxDecoration(
                   gradient: RadialGradient(
                     radius: 0.9,
-                    colors: [Colors.blue, Colors.purple],
+                    colors: [Colors.deepPurple, Colors.deepPurpleAccent],
                   ),
                 ),
                 defaultDecoration: BoxDecoration(
                   gradient: RadialGradient(
                     radius: 0.9,
-                    colors: [Colors.blue, Colors.purple],
+                    colors: [Colors.deepPurple, Colors.deepPurpleAccent],
                   ),
                 ),
                 markersAlignment: Alignment.center,
@@ -228,11 +228,11 @@ class _MyHomePageState extends State<MyHomePage> {
                     decoration: BoxDecoration(
                       color: tmpColor,
                       shape: BoxShape.circle,
-                      border: Border.all(color: Colors.blueAccent),
+                      border: Border.all(color: Colors.deepPurpleAccent),
                     ),
                     child: Icon(
                       Icons.water_drop,
-                      color: Colors.blue,
+                      color: Colors.deepPurple,
                     ),
                   ),
                   onTap: () {
@@ -256,11 +256,11 @@ class _MyHomePageState extends State<MyHomePage> {
                     decoration: BoxDecoration(
                       color: tmpColor,
                       shape: BoxShape.circle,
-                      border: Border.all(color: Colors.blueAccent),
+                      border: Border.all(color: Colors.deepPurpleAccent),
                     ),
                     child: Icon(
                       Icons.self_improvement_sharp,
-                      color: Colors.blue,
+                      color: Colors.deepPurple,
                     ),
                   ),
                   onTap: () {

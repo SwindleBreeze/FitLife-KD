@@ -32,7 +32,7 @@ class _AddWaterPageState extends State<AddWaterPage> {
   bool _sliderNeeded = false;
   Color _color = Colors.purple;
 
-@override
+  @override
   void initState() {
     _checkPremiumAccess();
     _loadWaterIntake();
@@ -75,8 +75,7 @@ class _AddWaterPageState extends State<AddWaterPage> {
 
     if (waterIntakeEntry != null) {
       // Water intake entry found, update the waterIntake value
-      if(mounted)
-      {
+      if (mounted) {
         setState(() {
           waterIntake = waterIntakeEntry.waterIntake;
           maxWaterIntake = waterIntakeEntry.maxWaterIntake;
@@ -97,7 +96,7 @@ class _AddWaterPageState extends State<AddWaterPage> {
             fontStyle: FontStyle.italic,
           ),
         ),
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.deepPurple,
         centerTitle: true,
       ),
       body: Center(
@@ -117,7 +116,7 @@ class _AddWaterPageState extends State<AddWaterPage> {
                 ),
                 Icon(
                   Icons.water_drop_outlined,
-                  color: Colors.blue,
+                  color: Colors.deepPurple,
                   size: 110.0,
                 ),
               ],
@@ -359,7 +358,7 @@ class _AddWaterPageState extends State<AddWaterPage> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.deepPurple,
         child: Icon(Icons.analytics_outlined),
         onPressed: () {
           Navigator.push(

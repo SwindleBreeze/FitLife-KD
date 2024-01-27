@@ -374,6 +374,10 @@ Future<String> getLast7DayAverageSleepTime() async {
   // Calculate the average sleep duration
   double averageMinutes = totalMinutes / sleepCycles.length;
 
+  if (averageMinutes.isNaN || averageMinutes.isInfinite) {
+    averageMinutes = 0;
+  }
+
   // Format the average sleep duration as "h h m min"
   String formattedDuration = formatDuration(averageMinutes.toInt());
 

@@ -48,12 +48,12 @@ class _MySleepPageState extends State<MySleepPage> {
 
   @override
   Widget build(BuildContext context) {
-    if(!mounted) return SizedBox();
+    if (!mounted) return SizedBox();
 
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.deepPurple,
         title: Text(
           'SLEEP TRACKER',
           style: TextStyle(
@@ -66,7 +66,7 @@ class _MySleepPageState extends State<MySleepPage> {
       body: SetAlarm(),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.deepPurple,
         child: Icon(Icons.analytics_outlined),
         onPressed: () {
           Navigator.push(
